@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>SQUARE SERVICE — Бірыңғай жүйе v10</title>
+<meta name="theme-color" content="#0B0F1A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔷</text></svg>">
+<link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"SQUARE SERVICE","short_name":"SQ","start_url":".","scope":"./","display":"standalone","orientation":"portrait","background_color":"%230B0F1A","theme_color":"%230B0F1A","icons":[{"src":"data:image/svg+xml,<svg xmlns=%5C"http://www.w3.org/2000/svg%5C" viewBox=%5C"0 0 192 192%5C"><rect width=%5C"192%5C" height=%5C"192%5C" rx=%5C"32%5C" fill=%5C"%23111827%5C"/><text x=%5C"96%5C" y=%5C"125%5C" font-size=%5C"90%5C" text-anchor=%5C"middle%5C" fill=%5C"%233B82F6%5C" font-family=%5C"Arial%5C" font-weight=%5C"bold%5C">SQ</text></svg>","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"}]}'>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+:root{--bg:#0B0F1A;--bg2:#111827;--card:#1A2235;--card-h:#1F2B42;--brd:#2A3650;--brd2:#344264;--t1:#F0F4FC;--t2:#8B97B0;--t3:#4A5672;--blue:#3B82F6;--cyan:#06B6D4;--green:#10B981;--red:#EF4444;--amber:#F59E0B;--purple:#A855F7;--pink:#EC4899;--teal:#14B8A6;--gold:#D4A843;--lime:#84CC16}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--t1);overflow:hidden;height:100vh;height:100dvh}.mono{font-family:'JetBrains Mono',monospace}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--brd);border-radius:10px}
+.app{display:flex;height:100vh;height:100dvh}.side{width:220px;background:var(--bg2);border-right:1px solid var(--brd);display:flex;flex-direction:column;flex-shrink:0;z-index:30;transition:transform .25s ease}.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}.scroll{flex:1;overflow-y:auto;padding:20px}
+.brand{padding:16px;border-bottom:1px solid var(--brd)}.brand-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--blue),var(--cyan));border-radius:9px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;box-shadow:0 2px 10px rgba(59,130,246,0.3)}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 14px;color:var(--t2);cursor:pointer;transition:all .15s;border-left:3px solid transparent;font-size:12px;font-weight:500}.ni:hover{color:var(--t1);background:var(--card)}.ni.on{color:var(--blue);background:rgba(59,130,246,0.08);border-left-color:var(--blue);font-weight:700}.ni i{width:16px;text-align:center;font-size:11px}.ns{padding:14px 14px 5px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--t3)}
+.bar{height:50px;background:var(--bg2);border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex-shrink:0;gap:10px}.bar h2{font-size:14px;font-weight:700;white-space:nowrap}
+.hamburger{display:none;background:none;border:1px solid var(--brd);color:var(--t2);width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:15px;align-items:center;justify-content:center;flex-shrink:0}.hamburger:hover{color:var(--t1);background:var(--card)}.mob-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:25}
+.sc{background:var(--card);border:1px solid var(--brd);border-radius:10px;padding:14px;transition:all .2s;position:relative;overflow:hidden}.sc:hover{border-color:var(--brd2)}.sc .sv{font-size:20px;font-weight:800;margin-top:6px}.sc .sl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t2)}
+table.dt{width:100%;border-collapse:collapse}.dt thead th{padding:8px 10px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);border-bottom:1px solid var(--brd);text-align:left;background:var(--card);position:sticky;top:0;z-index:1}.dt tbody td{padding:9px 10px;font-size:11.5px;border-bottom:1px solid var(--brd);color:var(--t2)}.dt tbody tr:hover{background:var(--card-h)}
+.b{display:inline-block;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;letter-spacing:.02em}.b-sq{background:rgba(59,130,246,0.1);color:var(--blue)}.b-kh{background:rgba(16,185,129,0.1);color:var(--green)}.b-paid{background:rgba(16,185,129,0.1);color:var(--green);border:1px solid rgba(16,185,129,0.2)}.b-unpaid{background:rgba(239,68,68,0.1);color:var(--red);border:1px solid rgba(239,68,68,0.2)}.b-transit{background:rgba(245,158,11,0.1);color:var(--amber)}.b-cat{background:rgba(168,85,247,0.1);color:var(--purple)}.b-new{background:rgba(59,130,246,0.1);color:var(--blue)}.b-prog{background:rgba(245,158,11,0.1);color:var(--amber)}.b-done{background:rgba(16,185,129,0.1);color:var(--green)}
+.btn{padding:7px 14px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:none;transition:all .15s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-family:'Outfit',sans-serif}.btn:active{transform:scale(.97)}.btn-p{background:var(--blue);color:#fff}.btn-p:hover{background:#2563eb}.btn-s{background:var(--green);color:#fff}.btn-s:hover{background:#059669}.btn-g{background:transparent;color:var(--t2);border:1px solid var(--brd)}.btn-g:hover{background:var(--card);color:var(--t1)}.btn-d{background:var(--red);color:#fff}.btn-gold{background:linear-gradient(135deg,var(--gold),#b8922f);color:var(--bg);font-weight:700}
+.fi{width:100%;padding:8px 11px;background:var(--bg);border:1px solid var(--brd);border-radius:7px;color:var(--t1);font-size:12px;font-family:'Outfit',sans-serif;outline:none;transition:border-color .15s}.fi:focus{border-color:var(--blue)}.fi::placeholder{color:var(--t3)}
+.fsel{width:100%;padding:8px 11px;background:var(--bg);border:1px solid var(--brd);border-radius:7px;color:var(--t1);font-size:12px;font-family:'Outfit',sans-serif;outline:none;cursor:pointer}.fsel option{background:var(--bg);color:var(--t1)}.fl{display:block;font-size:9.5px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.mo{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center}.mo.show{display:flex}.mb{background:var(--bg2);border:1px solid var(--brd);border-radius:14px;width:95%;max-width:520px;max-height:90vh;overflow-y:auto;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,0.5)}.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.mh h3{font-size:15px;font-weight:800}.mx{width:30px;height:30px;border-radius:7px;background:var(--card);border:1px solid var(--brd);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .15s}.mx:hover{background:rgba(239,68,68,0.1);color:var(--red)}
+.cr-input{display:none}.cr-label{flex:1;padding:7px 10px;border:1px solid var(--brd);border-radius:7px;text-align:center;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--t2)}.cr-input:checked+.cr-label.cq{background:rgba(59,130,246,0.1);border-color:var(--blue);color:var(--blue)}.cr-input:checked+.cr-label.ck{background:rgba(16,185,129,0.1);border-color:var(--green);color:var(--green)}
+#toast-box{position:fixed;top:14px;right:14px;z-index:9999}.ti{padding:9px 14px;border-radius:8px;color:#fff;margin-bottom:7px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:7px;animation:slideIn .3s ease-out;box-shadow:0 4px 16px rgba(0,0,0,0.3)}@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.cb{background:var(--card);border:1px solid var(--brd);border-radius:10px;padding:16px}
+.sync-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;padding:2px 7px;border-radius:4px;font-weight:700}.sync-ok{background:rgba(16,185,129,0.1);color:var(--green)}.sync-saving{background:rgba(59,130,246,0.1);color:var(--blue)}.sync-err{background:rgba(239,68,68,0.1);color:var(--red)}.sync-offline{background:rgba(245,158,11,0.1);color:var(--amber)}
+.trend-bar-group{flex:1;display:flex;gap:1px;align-items:flex-end;min-width:0}.trend-bar{flex:1;border-radius:2px 2px 0 0;min-height:2px;transition:height .4s ease;position:relative;cursor:pointer}.trend-bar:hover{opacity:.8}.trend-bar .trend-tip{display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:var(--bg);border:1px solid var(--brd);border-radius:4px;padding:3px 6px;font-size:9px;white-space:nowrap;z-index:5;color:var(--t1)}.trend-bar:hover .trend-tip{display:block}.trend-label{flex:1;text-align:center;font-size:8px;color:var(--t3);min-width:0;overflow:hidden}
+.pipeline{display:flex;gap:2px;margin:6px 0}.pipe-step{flex:1;height:4px;border-radius:2px;background:var(--brd)}.pipe-step.done{background:var(--green)}.pipe-step.active{background:var(--blue);animation:pulse 1.5s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.auth-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center}.auth-box{background:var(--bg2);border:1px solid var(--brd);border-radius:16px;padding:32px;width:92%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.5)}.auth-box h2{font-size:20px;font-weight:900;text-align:center;margin-bottom:4px}.auth-box .subtitle{font-size:11px;color:var(--t3);text-align:center;margin-bottom:20px}.auth-tab{display:flex;gap:0;margin-bottom:16px;border-radius:8px;overflow:hidden;border:1px solid var(--brd)}.auth-tab button{flex:1;padding:8px;font-size:12px;font-weight:600;background:transparent;color:var(--t3);border:none;cursor:pointer;transition:all .15s;font-family:'Outfit'}.auth-tab button.active{background:var(--blue);color:#fff}.auth-msg{border-radius:8px;padding:8px 12px;font-size:11px;margin-bottom:12px;display:none}.auth-err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red)}.auth-ok{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--green)}
+.ur{display:grid;grid-template-columns:1fr 110px 75px 28px;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--brd)}
+.mob-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--brd);z-index:40;padding:4px 0 env(safe-area-inset-bottom,4px)}.mob-nav .mnav{display:flex;justify-content:space-around;padding:2px 0}.mob-nav .mn-item{display:flex;flex-direction:column;align-items:center;gap:1px;color:var(--t3);font-size:8px;padding:4px 8px;cursor:pointer;border-radius:6px;transition:all .15s}.mob-nav .mn-item.on{color:var(--blue)}.mob-nav .mn-item i{font-size:14px}
+.side-foot{padding:10px;border-top:1px solid var(--brd)}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.ai{animation:fu .3s ease-out}
+@media print{body,html{height:auto!important;overflow:visible!important;background:#fff!important;color:#000!important}.app,.side,.bar,#toast-box,.hamburger,.mob-overlay,.mob-nav{display:none!important}#print-area{display:block!important;position:absolute;top:0;left:0;width:100%;background:#fff;z-index:99999;padding:20px}}
+@media(max-width:768px){.side{position:fixed;left:0;top:0;bottom:0;transform:translateX(-100%);z-index:30;height:100%}.side.open{transform:translateX(0)}.mob-overlay.show{display:block}.hamburger{display:flex}.mob-nav{display:block}.scroll{padding:14px;padding-bottom:75px}.bar h2{font-size:12px}.sc .sv{font-size:16px}.mb{padding:16px;border-radius:14px 14px 0 0;max-height:95vh}.mo{align-items:flex-end}}
+</style>
+</head>
+<body>
+<!-- AUTH SCREEN -->
+<div class="auth-screen" id="auth-screen">
+<div class="auth-box">
+<div style="text-align:center;margin-bottom:14px"><div class="brand-icon" style="margin:0 auto;width:52px;height:52px;font-size:18px;border-radius:13px">SQ</div></div>
+<h2>SQUARE SERVICE</h2><div class="subtitle">Бірыңғай басқару платформасы v10</div>
+<div id="auth-has-data" style="display:none;margin-bottom:12px"><button onclick="handleOffline()" class="btn btn-s w-full" style="padding:12px;font-size:13px;border-radius:10px"><i class="fas fa-database mr-2"></i>Жергілікті деректермен жалғастыру</button><div style="font-size:9px;color:var(--t3);text-align:center;margin-top:4px" id="auth-data-info"></div></div>
+<div class="auth-tab"><button id="tab-login" class="active" onclick="switchAuthTab('login')">Кіру</button><button id="tab-register" onclick="switchAuthTab('register')">Тіркелу</button></div>
+<div id="auth-err" class="auth-msg auth-err"></div><div id="auth-ok" class="auth-msg auth-ok"></div>
+<form onsubmit="event.preventDefault();handleAuth()" class="space-y-3">
+<div><label class="fl">Email</label><input type="email" id="auth-email" class="fi" placeholder="email@example.com" required></div>
+<div><label class="fl">Құпиясөз</label><input type="password" id="auth-pass" class="fi" placeholder="Кемінде 6 таңба" required minlength="6"></div>
+<button type="submit" id="auth-btn" class="btn btn-p w-full" style="padding:12px;font-size:13px"><i class="fas fa-sign-in-alt mr-2"></i>Кіру</button>
+</form>
+<div style="border-top:1px solid var(--brd);margin-top:14px;padding-top:12px">
+<details style="cursor:pointer"><summary style="font-size:10px;color:var(--t2);font-weight:600"><i class="fas fa-key mr-1" style="color:var(--gold)"></i>AI бланк тану (API Key)</summary>
+<div style="margin-top:8px"><input type="password" id="auth-api-key" class="fi mono" placeholder="sk-ant-..." style="font-size:10px"><button onclick="saveApiKeyFromAuth()" class="btn btn-gold w-full mt-2" style="font-size:10px;padding:6px"><i class="fas fa-save mr-1"></i>API Key сақтау</button><div style="font-size:8px;color:var(--t3);margin-top:3px">Бланк суретін AI тану үшін → <a href="https://console.anthropic.com/" target="_blank" style="color:var(--blue)">console.anthropic.com</a></div></div>
+</details></div>
+<div style="text-align:center;margin-top:10px"><button onclick="handleOffline()" style="background:none;border:none;color:var(--t3);font-size:10px;cursor:pointer;text-decoration:underline"><i class="fas fa-wifi-slash mr-1"></i>Офлайн режим</button></div>
+</div></div>
+
+<!-- MAIN APP -->
+<div class="app" id="main-app" style="display:none">
+<div class="mob-overlay" id="mob-overlay" onclick="toggleSidebar()"></div>
+<aside class="side" id="sidebar">
+<div class="brand"><div class="flex items-center gap-3"><div class="brand-icon">SQ</div><div><div style="font-size:13px;font-weight:800;color:var(--t1)">SQUARE SERVICE</div><div style="font-size:9px;color:var(--t3)">Бірыңғай платформа</div></div></div></div>
+<nav class="flex-1 py-2 overflow-y-auto">
+<div class="ns">Негізгі</div>
+<div onclick="go('dash')" id="n-dash" class="ni on"><i class="fas fa-chart-pie"></i>Басты бет</div>
+<div onclick="go('orders')" id="n-orders" class="ni"><i class="fas fa-clipboard-list"></i>Тапсырыстар</div>
+<div onclick="go('tx')" id="n-tx" class="ni"><i class="fas fa-arrow-right-arrow-left"></i>Транзакциялар</div>
+<div onclick="go('cl')" id="n-cl" class="ni"><i class="fas fa-users"></i>Клиенттер</div>
+<div onclick="go('crm')" id="n-crm" class="ni"><i class="fas fa-funnel-dollar"></i>CRM воронка</div>
+<div class="ns">Қаржы</div>
+<div onclick="go('debt')" id="n-debt" class="ni"><i class="fas fa-hand-holding-dollar"></i>Қарыздар</div>
+<div onclick="go('tax')" id="n-tax" class="ni"><i class="fas fa-calculator"></i>Салық есебі</div>
+<div onclick="go('invoice')" id="n-invoice" class="ni"><i class="fas fa-file-invoice-dollar"></i>Инвойс</div>
+<div onclick="go('salary')" id="n-salary" class="ni"><i class="fas fa-money-check-alt"></i>Жалақы</div>
+<div class="ns">Құралдар</div>
+<div onclick="go('blanks')" id="n-blanks" class="ni"><i class="fas fa-stamp"></i>Нотариус бланктері</div>
+<div onclick="go('employees')" id="n-employees" class="ni"><i class="fas fa-id-badge"></i>Қызметкерлер</div>
+<div onclick="go('umrah')" id="n-umrah" class="ni"><i class="fas fa-mosque"></i>Умра пакет</div>
+<div onclick="go('cur')" id="n-cur" class="ni"><i class="fas fa-coins"></i>Валюта</div>
+<div class="ns">Қосымша</div>
+<div onclick="go('fixed')" id="n-fixed" class="ni"><i class="fas fa-rotate"></i>Тіркелген шығын</div>
+<div onclick="go('assets')" id="n-assets" class="ni"><i class="fas fa-laptop"></i>Активтер</div>
+<div onclick="go('notes')" id="n-notes" class="ni"><i class="fas fa-sticky-note"></i>Жазбалар</div>
+<div onclick="go('audit')" id="n-audit" class="ni"><i class="fas fa-shield-halved"></i>Аудит лог</div>
+<div onclick="go('settings')" id="n-settings" class="ni"><i class="fas fa-cog"></i>Баптаулар</div>
+</nav>
+<div class="side-foot"><div class="flex gap-1">
+<button onclick="xport()" class="btn btn-g flex-1 text-xs" title="JSON"><i class="fas fa-download"></i></button>
+<label class="btn btn-g flex-1 text-xs cursor-pointer" title="Импорт"><i class="fas fa-upload"></i><input type="file" accept=".json" class="hidden" onchange="imp(this)"></label>
+<button onclick="exportExcel()" class="btn btn-g flex-1 text-xs" title="Excel"><i class="fas fa-file-excel"></i></button>
+<button onclick="sav()" class="btn btn-p flex-1 text-xs" title="Сақтау"><i class="fas fa-save"></i></button>
+</div></div>
+</aside>
+
+<div class="main">
+<div class="bar">
+<div class="flex items-center gap-3"><button class="hamburger" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button><h2 id="page-title"><i class="fas fa-chart-pie mr-2" style="color:var(--blue)"></i>Басты бет</h2></div>
+<div class="flex items-center gap-2">
+<span id="sync-status" class="sync-badge sync-ok"><i class="fas fa-cloud"></i> ✓</span>
+<select id="gy" onchange="pmo();R()" class="fsel" style="width:80px;padding:4px 6px;font-size:10px"></select>
+<select id="gm" onchange="R()" class="fsel" style="width:100px;padding:4px 6px;font-size:10px"><option value="all">Барлығы</option></select>
+<button onclick="handleLogout()" class="btn btn-g" style="padding:4px 8px;font-size:9px" title="Шығу"><i class="fas fa-sign-out-alt"></i></button>
+</div></div>
+<div class="scroll">
+<!-- DASHBOARD -->
+<div id="v-dash" class="space-y-4 ai">
+<div class="flex flex-wrap gap-2 items-center mb-1">
+<select id="dash-co-filter" onchange="R()" class="fsel" style="width:160px;padding:4px 8px;font-size:10px"><option value="all">Барлық компаниялар</option><option value="SQUARE SERVICE">SQUARE SERVICE</option><option value="KHAIYR TRAVEL">KHAIYR TRAVEL</option></select>
+<button onclick="exportExcel()" class="btn btn-g" style="padding:3px 10px;font-size:9.5px"><i class="fas fa-file-excel mr-1" style="color:var(--green)"></i>Excel</button>
+<button onclick="shareDailySummaryWA()" class="btn btn-g" style="padding:3px 10px;font-size:9.5px"><i class="fab fa-whatsapp mr-1" style="color:#25D366"></i>Есеп</button>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-5 gap-3" id="dash-cards"></div>
+<div class="cb"><div class="flex justify-between items-center mb-3"><div style="font-size:12px;font-weight:700;color:var(--t2)"><i class="fas fa-chart-bar mr-1" style="color:var(--blue)"></i>Ай сайынғы динамика</div></div><div id="dash-trend" style="display:flex;align-items:flex-end;gap:3px;height:110px;padding:0 4px"></div><div id="dash-trend-labels" style="display:flex;gap:3px;padding:0 4px;margin-top:4px"></div></div>
+<div class="cb"><div class="flex justify-between items-center mb-2"><div style="font-size:12px;font-weight:700;color:var(--t2)"><i class="fas fa-clipboard-list mr-1" style="color:var(--amber)"></i>Белсенді тапсырыстар</div><button onclick="go('orders')" class="btn btn-g" style="font-size:9px;padding:3px 8px">Барлығы →</button></div><div id="dash-orders" class="space-y-2"></div></div>
+<div><div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:8px">Соңғы транзакциялар</div><div class="space-y-2" id="recent-list"></div></div>
+</div>
+
+<!-- ORDERS -->
+<div id="v-orders" class="hidden space-y-4 ai">
+<div class="flex flex-wrap gap-2 items-center justify-between">
+<div class="flex flex-wrap items-center gap-2"><div class="relative"><i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2" style="color:var(--t3);font-size:10px"></i><input type="text" id="ord-search" oninput="R()" placeholder="Іздеу..." class="fi" style="padding-left:28px;width:160px"></div>
+<select id="ord-status-filter" onchange="R()" class="fsel" style="width:130px;padding:4px 8px;font-size:10px"><option value="all">Барлық статус</option><option value="new">🆕 Жаңа</option><option value="translating">✍️ Аударылуда</option><option value="review">🔍 Тексерілуде</option><option value="notary">📋 Нотариуста</option><option value="done">✅ Дайын</option><option value="delivered">📦 Тапсырылды</option><option value="cancelled">❌ Бас тартылды</option></select></div>
+<button onclick="openOrderModal()" class="btn btn-p"><i class="fas fa-plus"></i> Тапсырыс</button>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="ord-stats"></div>
+<div class="cb" style="padding:0"><div class="overflow-x-auto" style="max-height:55vh;overflow-y:auto"><table class="dt"><thead><tr><th>№</th><th>Клиент</th><th>Тіл</th><th>Бет</th><th>Аудармашы</th><th>Мерзім</th><th>Баға</th><th>Статус</th><th>⚙</th></tr></thead><tbody id="ord-body"></tbody></table></div></div>
+</div>
+
+<!-- TRANSACTIONS -->
+<div id="v-tx" class="hidden space-y-4 ai">
+<div class="flex flex-wrap gap-2 items-center justify-between">
+<div class="flex flex-wrap items-center gap-2"><div class="relative"><i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2" style="color:var(--t3);font-size:10px"></i><input type="text" id="search-input" oninput="R()" placeholder="Іздеу..." class="fi" style="padding-left:28px;width:160px"></div>
+<select id="filter-co" onchange="R()" class="fsel" style="width:130px;padding:4px 8px;font-size:10px"><option value="all">Барлық компания</option><option value="SQUARE SERVICE">SQUARE SERVICE</option><option value="KHAIYR TRAVEL">KHAIYR TRAVEL</option></select>
+<select id="filter-cat" onchange="R()" class="fsel" style="width:130px;padding:4px 8px;font-size:10px"><option value="all">Барлық категория</option></select></div>
+<button onclick="oTx()" class="btn btn-p"><i class="fas fa-plus"></i> Транзакция</button>
+</div>
+<div class="cb" style="padding:0"><div class="overflow-x-auto" style="max-height:50vh;overflow-y:auto"><table class="dt"><thead><tr><th>Күні</th><th>Компания</th><th>Категория</th><th>Сипаттама</th><th>Клиент</th><th>Валюта</th><th>Статус</th><th style="text-align:right">Сома</th><th style="text-align:center">⚙</th></tr></thead><tbody id="tx-body"></tbody></table></div>
+<div id="no-data" class="hidden" style="padding:20px;text-align:center;color:var(--t3)"><i class="fas fa-inbox" style="font-size:16px;display:block;margin-bottom:4px"></i>Деректер жоқ</div>
+<div class="flex items-center justify-between" style="padding:8px 10px;border-top:1px solid var(--brd)"><div style="font-size:9px;color:var(--t3)" id="tx-page-info"></div><div class="flex gap-1"><button onclick="txPageChange(-1)" class="btn btn-g" style="padding:3px 8px;font-size:9px" id="tx-prev"><i class="fas fa-chevron-left"></i></button><span class="mono" style="font-size:10px;padding:3px 6px;color:var(--t2)" id="tx-page-num"></span><button onclick="txPageChange(1)" class="btn btn-g" style="padding:3px 8px;font-size:9px" id="tx-next"><i class="fas fa-chevron-right"></i></button></div></div></div>
+<div class="grid grid-cols-3 gap-3"><div class="sc text-center"><div class="sl">Кіріс</div><div class="sv mono" style="color:var(--green)" id="sum-inc">0</div></div><div class="sc text-center"><div class="sl">Шығыс</div><div class="sv mono" style="color:var(--red)" id="sum-exp">0</div></div><div class="sc text-center"><div class="sl">Пайда</div><div class="sv mono" style="color:var(--blue)" id="sum-net">0</div></div></div>
+</div>
+
+<!-- CLIENTS -->
+<div id="v-cl" class="hidden space-y-4 ai">
+<div class="flex justify-between items-center"><div style="font-size:12px;font-weight:700;color:var(--t2)">Клиенттер базасы</div><button onclick="oCl()" class="btn btn-p"><i class="fas fa-user-plus"></i> Клиент</button></div>
+<div class="flex flex-wrap gap-2"><div class="relative"><i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2" style="color:var(--t3);font-size:10px"></i><input type="text" id="cl-search" oninput="R()" placeholder="Іздеу..." class="fi" style="padding-left:28px;width:150px"></div>
+<select id="cl-filter-type" onchange="R()" class="fsel" style="width:110px;padding:4px 8px;font-size:10px"><option value="all">Барлығы</option><option value="person">👤 Жеке</option><option value="notary">⚖️ Нотариус</option><option value="company">🏢 Компания</option></select>
+<select id="cl-filter-lead" onchange="R()" class="fsel" style="width:110px;padding:4px 8px;font-size:10px"><option value="all">Барлығы</option><option value="new">🆕 Жаңа</option><option value="contact">📞</option><option value="negotiation">💬</option><option value="proposal">📋</option><option value="won">✅</option><option value="lost">❌</option></select></div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="cl-grid"></div>
+</div>
+
+<!-- CRM -->
+<div id="v-crm" class="hidden space-y-4 ai">
+<div style="font-size:12px;font-weight:700;color:var(--t2)"><i class="fas fa-funnel-dollar mr-1" style="color:var(--gold)"></i>CRM — Сату воронкасы</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="crm-stats"></div>
+<div class="cb" style="padding:10px"><div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-3" id="crm-funnel" style="min-height:180px"></div></div>
+<div class="cb"><div style="font-size:12px;font-weight:700;margin-bottom:8px"><i class="fas fa-clock-rotate-left mr-1" style="color:var(--teal)"></i>Белсенділік</div><div class="space-y-2" id="crm-history"></div></div>
+</div>
+
+<!-- DEBTS -->
+<div id="v-debt" class="hidden space-y-4 ai">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3"><div class="sc"><div class="sl"><i class="fas fa-arrow-down mr-1" style="color:var(--red)"></i>Алашақ</div><div class="sv mono" style="color:var(--red)" id="debt-recv">0</div></div><div class="sc"><div class="sl"><i class="fas fa-arrow-up mr-1" style="color:var(--amber)"></i>Берешек</div><div class="sv mono" style="color:var(--amber)" id="debt-pay">0</div></div></div>
+<div class="space-y-2" id="debt-list"></div>
+</div>
+
+<!-- TAX -->
+<div id="v-tax" class="hidden space-y-4 ai">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3"><div class="sc text-center"><div class="sl">Кіріс</div><div class="sv mono" style="color:var(--green)" id="tax-inc">0</div></div><div class="sc text-center"><div class="sl">Шығыс</div><div class="sv mono" style="color:var(--red)" id="tax-exp">0</div></div><div class="sc text-center"><div class="sl">Таза табыс</div><div class="sv mono" style="color:var(--blue)" id="tax-net">0</div></div><div class="sc text-center"><div class="sl">ИПН (10%)</div><div class="sv mono" style="color:var(--purple)" id="tax-ipn">0</div></div></div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div class="cb"><div style="font-size:12px;font-weight:700;margin-bottom:8px">SQUARE SERVICE</div><div id="tax-sq"></div></div><div class="cb"><div style="font-size:12px;font-weight:700;margin-bottom:8px">KHAIYR TRAVEL</div><div id="tax-kh"></div></div></div>
+<div class="cb"><div style="font-size:12px;font-weight:700;margin-bottom:8px"><i class="fas fa-file-invoice mr-1" style="color:var(--amber)"></i>Ай сайынғы төлемдер (ЖК/ИП)</div><div class="grid grid-cols-1 md:grid-cols-2 gap-3"><div><div class="sc" style="border-color:rgba(239,68,68,0.3)"><div class="flex justify-between items-center"><div style="font-weight:700;font-size:12px;color:var(--red)">ИПН (10%)</div><div class="mono font-bold" style="font-size:16px;color:var(--red)" id="tax-d-ipn">0</div></div></div></div><div class="space-y-1 text-xs" id="tax-monthly-payments"></div></div></div>
+</div>
+
+<!-- INVOICE -->
+<div id="v-invoice" class="hidden space-y-4 ai">
+<div class="cb"><div style="font-size:12px;font-weight:700;margin-bottom:10px"><i class="fas fa-file-invoice-dollar mr-1" style="color:var(--gold)"></i>Счёт на оплату</div>
+<div class="grid grid-cols-2 gap-3 mb-3"><div><label class="fl">Компания</label><select id="inv-co" class="fsel"><option value="sq">SQUARE SERVICE</option><option value="kh">KHAIYR TRAVEL</option></select></div><div><label class="fl">Счёт №</label><input type="number" id="inv-num" class="fi mono" value="185"></div></div>
+<div><label class="fl">Күні</label><input type="date" id="inv-date" class="fi" style="max-width:180px"></div>
+<div style="border-top:1px solid var(--brd);margin:10px 0;padding-top:10px"><div class="grid grid-cols-2 gap-3"><div><label class="fl">Покупатель</label><input type="text" id="inv-buyer-name" class="fi"></div><div><label class="fl">БИН</label><input type="text" id="inv-buyer-bin" class="fi mono"></div></div><div class="mt-2"><label class="fl">Адрес</label><input type="text" id="inv-buyer-addr" class="fi"></div></div>
+<div style="border-top:1px solid var(--brd);margin:10px 0;padding-top:10px"><div class="flex justify-between items-center mb-2"><div style="font-size:11px;font-weight:700;color:var(--t2)">Қызметтер</div><button onclick="addInvRow()" class="btn btn-gold" style="font-size:9px;padding:3px 8px"><i class="fas fa-plus"></i></button></div><div id="inv-rows"></div></div>
+<div><label class="fl">Договор</label><input type="text" id="inv-contract" class="fi"></div>
+<div class="mt-3 grid grid-cols-2 gap-3"><div class="sc text-center"><div class="sl">Барлығы</div><div class="sv mono" style="color:var(--green)" id="inv-total">0 ₸</div></div><div class="sc text-center"><div class="sl">Жазумен</div><div style="font-size:10px;color:var(--t2);margin-top:6px" id="inv-words">—</div></div></div>
+<div class="flex gap-2 mt-3"><button onclick="printInv()" class="btn btn-p"><i class="fas fa-print"></i> Басып шығару</button><button onclick="saveInvDraft()" class="btn btn-g"><i class="fas fa-save"></i> Сақтау</button></div>
+</div>
+<div class="cb"><div style="font-size:12px;font-weight:700;margin-bottom:8px">Сақталған счёттар</div><div class="space-y-2" id="inv-saved-list"></div></div>
+</div>
+
+<!-- SALARY -->
+<div id="v-salary" class="hidden space-y-4 ai">
+<div class="flex justify-between items-center"><div style="font-size:12px;font-weight:700;color:var(--t2)"><i class="fas fa-money-check-alt mr-1" style="color:var(--green)"></i>Жалақы есебі</div></div>
+<div class="cb" style="padding:0"><div class="overflow-x-auto"><table class="dt"><thead><tr><th>Қызметкер</th><th>Лауазымы</th><th>Негізгі</th><th>Тапсырыстан</th><th>Барлығы</th></tr></thead><tbody id="salary-body"></tbody></table></div></div>
+</div>
+
+<!-- BLANKS -->
+<div id="v-blanks" class="hidden space-y-4 ai">
+<div class="flex justify-between items-center"><div style="font-size:12px;font-weight:700;color:var(--t2)"><i class="fas fa-stamp mr-1" style="color:var(--purple)"></i>Нотариус бланктері</div><button onclick="openBlankModal()" class="btn btn-p"><i class="fas fa-plus"></i> Бланк</button></div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-3" id="blank-stats"></div>
+<div class="flex flex-wrap gap-2"><div class="relative"><i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2" style="color:var(--t3);font-size:10px"></i><input type="text" id="blank-search" oninput="R()" placeholder="Іздеу..." class="fi" style="padding-left:28px;width:150px"></div></div>
+<div class="cb" style="padding:0"><div class="overflow-x-auto"><table class="dt"><thead><tr><th>Реестр</th><th>Күні</th><th>Нотариус</th><th>Қала</th><th>Лицензия</th><th>Қол қойған</th><th>Код</th><th>Мәртебе</th><th>⚙</th></tr></thead><tbody id="blank-body"></tbody></table></div></div>
+</div>
+
+<!-- EMPLOYEES -->
+<div id="v-employees" class="hidden space-y-4 ai">
+<div class="flex justify-between items-center"><div style="font-size:12px;font-weight:700;color:var(--t2)"><i class="fas fa-id-badge mr-1" style="color:var(--cyan)"></i>Қызметкерлер</div><button onclick="openEmployeeModal()" class="btn btn-p"><i class="fas fa-user-plus"></i> Қызметкер</button></div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="emp-grid"></div>
+</div>
+
+<!-- UMRAH -->
+<div id="v-umrah" class="hidden space-y-4 ai">
+<div class="cb"><div class="flex justify-between items-center mb-3"><div style="font-size:12px;font-weight:700"><i class="fas fa-mosque mr-1" style="color:var(--gold)"></i>Умра пакет</div><button onclick="addUmrahRow()" class="btn btn-gold" style="font-size:9px;padding:3px 8px"><i class="fas fa-plus"></i></button></div>
+<div id="umrah-rows"></div>
+<div class="mt-3 grid grid-cols-2 gap-3"><div><label class="fl">Сату бағасы (KZT)</label><input type="number" id="umrah-sell" class="fi mono" oninput="calcUmrah()"></div><div><label class="fl">Адам саны</label><input type="number" id="umrah-ppl" class="fi mono" value="1" min="1" oninput="calcUmrah()"></div></div>
+<div class="mt-3 grid grid-cols-3 gap-3"><div class="sc text-center"><div class="sl">Өзіндік құн</div><div class="sv mono text-sm" style="color:var(--amber)" id="umrah-cost">0 ₸</div></div><div class="sc text-center"><div class="sl">1 адам пайда</div><div class="sv mono text-sm" style="color:var(--green)" id="umrah-p1">0 ₸</div></div><div class="sc text-center"><div class="sl">Жалпы пайда</div><div class="sv mono text-sm" style="color:var(--blue)" id="umrah-pt">0 ₸</div></div></div>
+<button onclick="saveUmrahPkg()" class="btn btn-s mt-3"><i class="fas fa-save"></i> Сақтау</button>
+</div>
+<div class="cb"><div style="font-size:12px;font-weight:700;margin-bottom:8px">Сақталған пакеттер</div><div id="umrah-saved" class="space-y-2"></div></div>
+</div>
+
+<!-- CURRENCY -->
+<div id="v-cur" class="hidden space-y-4 ai">
+<div class="cb"><div class="flex justify-between items-center mb-3"><div style="font-size:12px;font-weight:700"><i class="fas fa-coins mr-1" style="color:var(--amber)"></i>Конвертер</div><button onclick="fetchRates()" class="btn btn-g" style="font-size:9px"><i class="fas fa-sync-alt"></i></button></div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-end"><div><label class="fl">Сома</label><input type="number" id="conv-amt" class="fi mono" value="1" oninput="convertCur()"></div><div><label class="fl">Бастапқы</label><select id="conv-from" class="fsel" onchange="convertCur()"><option>USD</option><option>EUR</option><option>RUB</option><option>TRY</option><option>SAR</option><option>AED</option><option>KZT</option></select></div><div><label class="fl">Мақсат</label><select id="conv-to" class="fsel" onchange="convertCur()"><option selected>KZT</option><option>USD</option><option>EUR</option><option>RUB</option></select></div></div>
+<div class="sc mt-3 text-center"><div class="sv mono" style="color:var(--green)" id="conv-result">—</div><div style="font-size:9px;color:var(--t3);margin-top:4px" id="conv-rate-info"></div></div></div>
+<div class="grid grid-cols-3 md:grid-cols-5 gap-2" id="rates-grid"></div>
+</div>
+
+<!-- FIXED -->
+<div id="v-fixed" class="hidden space-y-4 ai"><div class="flex justify-between items-center"><div style="font-size:12px;font-weight:700;color:var(--t2)"><i class="fas fa-rotate mr-1" style="color:var(--teal)"></i>Тіркелген шығындар</div><button onclick="openFixedModal()" class="btn btn-p"><i class="fas fa-plus"></i></button></div><div class="space-y-2" id="fixed-list"></div></div>
+<!-- ASSETS -->
+<div id="v-assets" class="hidden space-y-4 ai"><div class="flex justify-between items-center"><div style="font-size:12px;font-weight:700;color:var(--t2)"><i class="fas fa-laptop mr-1" style="color:var(--blue)"></i>Активтер</div><button onclick="openAssetModal()" class="btn btn-p"><i class="fas fa-plus"></i></button></div><div class="space-y-2" id="assets-list"></div></div>
+<!-- NOTES -->
+<div id="v-notes" class="hidden space-y-4 ai"><div class="flex justify-between items-center"><div style="font-size:12px;font-weight:700;color:var(--t2)"><i class="fas fa-sticky-note mr-1" style="color:var(--amber)"></i>Жазбалар</div><button onclick="openNoteModal()" class="btn btn-p"><i class="fas fa-plus"></i></button></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3" id="notes-grid"></div></div>
+<!-- AUDIT -->
+<div id="v-audit" class="hidden space-y-4 ai"><div style="font-size:12px;font-weight:700;color:var(--t2)"><i class="fas fa-shield-halved mr-1" style="color:var(--cyan)"></i>Аудит лог</div><div class="cb" style="padding:0"><div class="overflow-x-auto" style="max-height:60vh;overflow-y:auto"><table class="dt"><thead><tr><th>Уақыт</th><th>Қолданушы</th><th>Әрекет</th><th>Мәліметтер</th></tr></thead><tbody id="audit-body"></tbody></table></div></div></div>
+
+<!-- SETTINGS -->
+<div id="v-settings" class="hidden space-y-4 ai">
+<div style="font-size:12px;font-weight:700;color:var(--t2)"><i class="fas fa-cog mr-1" style="color:var(--blue)"></i>Баптаулар</div>
+<div class="cb"><div style="font-size:12px;font-weight:700;margin-bottom:8px">Салық параметрлері</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3"><div><label class="fl">МЗП</label><input type="number" id="set-mzp" class="fi mono" value="85000"></div><div><label class="fl">МРП</label><input type="number" id="set-mrp" class="fi mono" value="3932"></div><div><label class="fl">ОПВ %</label><input type="number" id="set-opv" class="fi mono" value="10" step="0.5"></div><div><label class="fl">СО %</label><input type="number" id="set-so" class="fi mono" value="3.5" step="0.5"></div><div><label class="fl">Соц.салық МРП</label><input type="number" id="set-soctax-mrp" class="fi mono" value="1"></div><div><label class="fl">ОПВР %</label><input type="number" id="set-opvr" class="fi mono" value="1.5" step="0.5"></div><div><label class="fl">ИПН %</label><input type="number" id="set-ipn" class="fi mono" value="10"></div><div class="flex items-end pb-1"><label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="set-vosms-free" checked style="accent-color:var(--green)"><span style="font-size:11px;color:var(--t2)">ВОСМС бос</span></label></div></div>
+<button onclick="saveSettings()" class="btn btn-s mt-3"><i class="fas fa-save mr-1"></i>Сақтау</button></div>
+<div class="cb"><div style="font-size:12px;font-weight:700;margin-bottom:8px">🤖 AI бланк тану</div>
+<div><label class="fl">Anthropic API Key (Claude)</label><input type="password" id="set-api-key" class="fi mono" placeholder="sk-ant-..."><div style="font-size:8px;color:var(--t3);margin-top:2px">Бланк суретін автоматты тану үшін. <a href="https://console.anthropic.com/" target="_blank" style="color:var(--blue)">API кілтін алу →</a></div></div>
+<button onclick="saveApiKey()" class="btn btn-s mt-2" style="font-size:10px"><i class="fas fa-key mr-1"></i>Сақтау</button></div>
+<div class="cb"><div style="font-size:12px;font-weight:700;margin-bottom:8px">🤖 Болашақ интеграциялар</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<div class="sc" style="border-left:3px solid #25D366"><div class="sl"><i class="fab fa-whatsapp mr-1" style="color:#25D366"></i>WhatsApp Bot</div><div style="font-size:10px;color:var(--t3);margin-top:4px">Автоматты хабарлама, тапсырыс статусы</div><div class="b b-prog mt-2">🔌 Дайын қосылуға</div></div>
+<div class="sc" style="border-left:3px solid #E4405F"><div class="sl"><i class="fab fa-instagram mr-1" style="color:#E4405F"></i>Instagram Bot</div><div style="font-size:10px;color:var(--t3);margin-top:4px">DM-ден лид жинау, авто жауап</div><div class="b b-prog mt-2">🔌 Дайын қосылуға</div></div>
+<div class="sc" style="border-left:3px solid #0088CC"><div class="sl"><i class="fab fa-telegram mr-1" style="color:#0088CC"></i>Telegram Bot</div><div style="font-size:10px;color:var(--t3);margin-top:4px">Тапсырыс қабылдау + ішкі хабарлама</div><div class="b b-prog mt-2">🔌 Дайын қосылуға</div></div>
+</div></div>
+<div class="cb"><div style="font-size:12px;font-weight:700;margin-bottom:8px">Деректер</div><div class="flex flex-wrap gap-2"><button onclick="xport()" class="btn btn-g"><i class="fas fa-download mr-1"></i>JSON</button><label class="btn btn-g cursor-pointer"><i class="fas fa-upload mr-1"></i>Импорт<input type="file" accept=".json" class="hidden" onchange="imp(this)"></label><button onclick="clearAllData()" class="btn btn-d"><i class="fas fa-trash mr-1"></i>Өшіру</button></div><div style="font-size:9px;color:var(--t3);margin-top:6px" id="storage-info"></div></div>
+</div>
+
+</div></div></div><!-- end scroll/main/app -->
+
+<!-- MOBILE NAV -->
+<div class="mob-nav"><div class="mnav">
+<div class="mn-item on" onclick="go('dash')"><i class="fas fa-home"></i><span>Басты</span></div>
+<div class="mn-item" onclick="go('orders')"><i class="fas fa-clipboard-list"></i><span>Тапсырыс</span></div>
+<div class="mn-item" onclick="go('tx')"><i class="fas fa-exchange-alt"></i><span>Қаржы</span></div>
+<div class="mn-item" onclick="go('cl')"><i class="fas fa-users"></i><span>Клиент</span></div>
+<div class="mn-item" onclick="oTx()"><i class="fas fa-plus-circle" style="font-size:20px;color:var(--blue)"></i><span>Қосу</span></div>
+</div></div>
+<!-- ===== MODALS ===== -->
+<div id="modal-tx" class="mo"><div class="mb"><div class="mh"><h3 id="modal-tx-title">Жаңа транзакция</h3><button class="mx" onclick="closeModals()"><i class="fas fa-times"></i></button></div>
+<form onsubmit="event.preventDefault();saveTx()" class="space-y-3"><input type="hidden" id="tx-id">
+<div><label class="fl">Компания</label><div class="flex gap-2"><input type="radio" name="tx-co" value="SQUARE SERVICE" id="tx-co-sq" class="cr-input" checked><label for="tx-co-sq" class="cr-label cq">SQUARE SERVICE</label><input type="radio" name="tx-co" value="KHAIYR TRAVEL" id="tx-co-kh" class="cr-input"><label for="tx-co-kh" class="cr-label ck">KHAIYR TRAVEL</label></div></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Түрі</label><select id="tx-type" class="fsel" onchange="populateModalCats()"><option value="income">Кіріс (+)</option><option value="expense">Шығыс (-)</option></select></div><div><label class="fl">Күні</label><input type="date" id="tx-date" class="fi"></div></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Категория</label><select id="tx-cat" class="fsel"></select></div><div><label class="fl">Клиент</label><select id="tx-client" class="fsel"><option value="">—</option></select></div></div>
+<div><label class="fl">Сипаттама</label><input type="text" id="tx-desc" class="fi" placeholder="Қосымша"></div>
+<div class="grid grid-cols-3 gap-3"><div><label class="fl">Сома</label><input type="number" id="tx-amt" class="fi mono" step="any" min="0" oninput="updateKztPreview()"></div><div><label class="fl">Валюта</label><select id="tx-cur" class="fsel" onchange="updateKztPreview()"><option>KZT</option><option>USD</option><option>EUR</option><option>RUB</option><option>TRY</option><option>SAR</option><option>AED</option></select></div><div><label class="fl">KZT</label><input type="text" id="tx-kzt" class="fi mono" readonly style="background:var(--card);color:var(--green)"></div></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Статус</label><select id="tx-status" class="fsel"><option value="paid">Төленді</option><option value="unpaid">Қарыз</option></select></div><div><label class="fl">Мерзімі</label><input type="date" id="tx-due" class="fi"></div></div>
+<div><label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="tx-transit" style="accent-color:var(--amber)"><span style="font-size:11px;color:var(--t2)">Транзит ақша</span></label></div>
+<button type="submit" class="btn btn-p w-full" style="padding:10px"><i class="fas fa-save mr-1"></i>Сақтау</button></form></div></div>
+
+<div id="modal-cl" class="mo"><div class="mb" style="max-width:440px"><div class="mh"><h3 id="modal-cl-title">Жаңа клиент</h3><button class="mx" onclick="closeModals()"><i class="fas fa-times"></i></button></div>
+<form onsubmit="event.preventDefault();saveCl()" class="space-y-3"><input type="hidden" id="cl-id">
+<div><label class="fl">Аты-жөні</label><input type="text" id="cl-name" class="fi" required></div>
+<div><label class="fl">Түрі</label><select id="cl-type" class="fsel" onchange="toggleNotaryFields()"><option value="person">👤 Жеке</option><option value="notary">⚖️ Нотариус</option><option value="company">🏢 Компания</option></select></div>
+<div id="notary-fields" style="display:none" class="space-y-2"><div style="background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.15);border-radius:8px;padding:8px"><div><label class="fl">Кеңсе</label><input type="text" id="cl-notary-office" class="fi"></div><div class="mt-2"><label class="fl">Мекен-жай</label><input type="text" id="cl-notary-addr" class="fi"></div><div class="mt-2"><label class="fl">Лицензия</label><input type="text" id="cl-notary-license" class="fi"></div></div></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Телефон</label><input type="text" id="cl-phone" class="fi" placeholder="+7 7XX"></div><div><label class="fl">Компания</label><select id="cl-co" class="fsel"><option value="">—</option><option>SQUARE SERVICE</option><option>KHAIYR TRAVEL</option></select></div></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Қызығушылық</label><select id="cl-interest" class="fsel"><option value="">—</option><option>Аударма</option><option>Нотариалды аударма</option><option>Апостиль</option><option>Умра тур</option><option>Виза</option><option>Билет</option></select></div><div><label class="fl">Лид статус</label><select id="cl-lead" class="fsel"><option value="new">🆕 Жаңа</option><option value="contact">📞 Байланыс</option><option value="negotiation">💬 Келіссөз</option><option value="proposal">📋 Ұсыныс</option><option value="won">✅ Мәміле</option><option value="lost">❌ Бас тартты</option></select></div></div>
+<div><label class="fl">Көзі</label><select id="cl-source" class="fsel"><option value="">—</option><option value="whatsapp">WhatsApp</option><option value="instagram">Instagram</option><option value="telegram">Telegram</option><option value="referral">Ұсыныспен</option><option value="website">Веб-сайт</option><option value="repeat">Қайталанған</option></select></div>
+<div><label class="fl">Ескертпе</label><input type="text" id="cl-note" class="fi"></div>
+<button type="submit" class="btn btn-p w-full" style="padding:10px"><i class="fas fa-save mr-1"></i>Сақтау</button></form></div></div>
+
+<div id="modal-order" class="mo"><div class="mb" style="max-width:500px"><div class="mh"><h3 id="modal-order-title">Жаңа тапсырыс</h3><button class="mx" onclick="closeModals()"><i class="fas fa-times"></i></button></div>
+<form onsubmit="event.preventDefault();saveOrder()" class="space-y-3"><input type="hidden" id="ord-id">
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Клиент</label><select id="ord-client" class="fsel"></select></div><div><label class="fl">Аудармашы</label><select id="ord-translator" class="fsel"><option value="">—</option></select></div></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Бастапқы тіл</label><select id="ord-lang-from" class="fsel"><option>Қазақша</option><option>Русский</option><option>English</option><option>Türkçe</option><option>العربية</option><option>中文</option><option>Deutsch</option><option>Français</option><option>한국어</option><option>日本語</option><option>Өзбек</option><option>Қырғыз</option></select></div><div><label class="fl">Мақсат тіл</label><select id="ord-lang-to" class="fsel"><option>Русский</option><option>Қазақша</option><option>English</option><option>Türkçe</option><option>العربية</option><option>中文</option><option>Deutsch</option></select></div></div>
+<div class="grid grid-cols-3 gap-3"><div><label class="fl">Бет саны</label><input type="number" id="ord-pages" class="fi mono" min="1" value="1"></div><div><label class="fl">Баға (₸)</label><input type="number" id="ord-price" class="fi mono"></div><div><label class="fl">Мерзімі</label><input type="date" id="ord-deadline" class="fi"></div></div>
+<div><label class="fl">Қызмет</label><select id="ord-service" class="fsel"><option>Аударма</option><option>Нотариалды аударма</option><option>Апостиль</option><option>Техникалық аударма</option><option>Құқықтық аударма</option><option>Медициналық аударма</option><option>Басқа</option></select></div>
+<div><label class="fl">Статус</label><select id="ord-status" class="fsel"><option value="new">🆕 Жаңа</option><option value="translating">✍️ Аударылуда</option><option value="review">🔍 Тексерілуде</option><option value="notary">📋 Нотариуста</option><option value="done">✅ Дайын</option><option value="delivered">📦 Тапсырылды</option><option value="cancelled">❌ Бас тартылды</option></select></div>
+<div><label class="fl">Ескертпе</label><input type="text" id="ord-notes" class="fi"></div>
+<button type="submit" class="btn btn-p w-full" style="padding:10px"><i class="fas fa-save mr-1"></i>Сақтау</button></form></div></div>
+
+<div id="modal-blank" class="mo"><div class="mb" style="max-width:560px"><div class="mh"><h3 id="modal-blank-title">Бланк</h3><button class="mx" onclick="closeModals()"><i class="fas fa-times"></i></button></div>
+<div id="blk-ai-zone" style="border:2px dashed var(--brd);border-radius:10px;padding:16px;text-align:center;margin-bottom:12px;cursor:pointer;transition:all .2s;position:relative" onclick="document.getElementById('blk-photo').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue)';this.style.background='rgba(59,130,246,0.05)'" ondragleave="this.style.borderColor='var(--brd)';this.style.background='transparent'" ondrop="event.preventDefault();this.style.borderColor='var(--brd)';this.style.background='transparent';handleBlankDrop(event)">
+<input type="file" id="blk-photo" accept="image/*" capture="environment" class="hidden" onchange="handleBlankPhoto(this)">
+<div id="blk-ai-idle"><i class="fas fa-camera" style="font-size:24px;color:var(--purple);margin-bottom:6px;display:block"></i><div style="font-size:11px;font-weight:700;color:var(--t1)">📸 Суретті жүктеңіз немесе сүйреңіз</div><div style="font-size:9px;color:var(--t3);margin-top:2px">AI автоматты түрде деректерді танып, толтырады</div></div>
+<div id="blk-ai-loading" style="display:none"><i class="fas fa-brain fa-spin" style="font-size:24px;color:var(--purple);margin-bottom:6px;display:block"></i><div style="font-size:11px;font-weight:700;color:var(--purple)">🤖 AI талдауда...</div><div style="font-size:9px;color:var(--t3)">Claude бланкты оқып жатыр</div></div>
+<div id="blk-ai-done" style="display:none"><i class="fas fa-check-circle" style="font-size:24px;color:var(--green);margin-bottom:6px;display:block"></i><div style="font-size:11px;font-weight:700;color:var(--green)">✅ Деректер танылды!</div><div style="font-size:9px;color:var(--t3)">Тексеріп, сақтаңыз</div></div>
+</div>
+<form onsubmit="event.preventDefault();saveBlank()" class="space-y-3"><input type="hidden" id="blk-id">
+<div><label class="fl">Нотариус аты-жөні</label><input type="text" id="blk-notary-name" class="fi" placeholder="Купенова Бақыт Қанрекешевна"></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Қала</label><input type="text" id="blk-city" class="fi" placeholder="Қызылорда"></div><div><label class="fl">Куәландыру күні</label><input type="date" id="blk-date" class="fi"></div></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Лицензия №</label><input type="text" id="blk-license" class="fi mono" placeholder="0000386"></div><div><label class="fl">Лицензия күні</label><input type="date" id="blk-license-date" class="fi"></div></div>
+<div><label class="fl">Лицензия берген мекеме</label><input type="text" id="blk-license-org" class="fi" placeholder="Әділет министрлігі..."></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Реестр №</label><input type="text" id="blk-reg" class="fi mono" placeholder="1402"></div><div><label class="fl">Бланк коды</label><input type="text" id="blk-code" class="fi mono" placeholder="AM060661..."></div></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Қол қойған тұлға</label><input type="text" id="blk-signer" class="fi" placeholder="Мырзаханұлы Жанболат"></div><div><label class="fl">ИИН</label><input type="text" id="blk-signer-iin" class="fi mono" placeholder="881006302063"></div></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Мақсат/Құжат түрі</label><input type="text" id="blk-purpose" class="fi" placeholder="Аударма куәландыру"></div><div><label class="fl">Мәртебе</label><select id="blk-status" class="fsel"><option value="active">🟢 Белсенді</option><option value="used">🟡 Қолданылған</option><option value="expired">🔴 Өткен</option></select></div></div>
+<div><label class="fl">Ескертпе</label><input type="text" id="blk-note" class="fi" placeholder="Қосымша ақпарат"></div>
+<button type="submit" class="btn btn-p w-full" style="padding:10px"><i class="fas fa-save mr-1"></i>Сақтау</button></form></div></div>
+
+<div id="modal-employee" class="mo"><div class="mb" style="max-width:420px"><div class="mh"><h3 id="modal-emp-title">Қызметкер</h3><button class="mx" onclick="closeModals()"><i class="fas fa-times"></i></button></div>
+<form onsubmit="event.preventDefault();saveEmployee()" class="space-y-3"><input type="hidden" id="emp-id">
+<div><label class="fl">Аты-жөні</label><input type="text" id="emp-name" class="fi" required></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Лауазымы</label><select id="emp-position" class="fsel"><option>Аудармашы</option><option>Менеджер</option><option>Бухгалтер</option><option>Директор</option><option>Стажер</option></select></div><div><label class="fl">Телефон</label><input type="text" id="emp-phone" class="fi"></div></div>
+<div><label class="fl">Тілдері</label><input type="text" id="emp-langs" class="fi" placeholder="Қазақша, Русский, English"></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Жалақы (₸)</label><input type="number" id="emp-salary" class="fi mono" value="0"></div><div><label class="fl">1 бет тарифі (₸)</label><input type="number" id="emp-rate" class="fi mono" value="0"></div></div>
+<div><label class="fl">Жұмысқа алынған</label><input type="date" id="emp-hire" class="fi"></div>
+<button type="submit" class="btn btn-p w-full" style="padding:10px"><i class="fas fa-save mr-1"></i>Сақтау</button></form></div></div>
+
+<div id="modal-fixed" class="mo"><div class="mb" style="max-width:400px"><div class="mh"><h3>Тіркелген шығын</h3><button class="mx" onclick="closeModals()"><i class="fas fa-times"></i></button></div>
+<form onsubmit="event.preventDefault();saveFixed()" class="space-y-3"><input type="hidden" id="fix-id">
+<div><label class="fl">Атауы</label><input type="text" id="fix-name" class="fi" required></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Сома (KZT)</label><input type="number" id="fix-amount" class="fi mono" required></div><div><label class="fl">Компания</label><select id="fix-co" class="fsel"><option>SQUARE SERVICE</option><option>KHAIYR TRAVEL</option></select></div></div>
+<div><label class="fl">Категория</label><select id="fix-cat" class="fsel"><option>Офис жалдау</option><option>Байланыс</option><option>Жалақы</option><option>Салық</option><option>Басқа</option></select></div>
+<button type="submit" class="btn btn-p w-full" style="padding:10px"><i class="fas fa-save mr-1"></i>Сақтау</button></form></div></div>
+
+<div id="modal-asset" class="mo"><div class="mb" style="max-width:400px"><div class="mh"><h3>Актив</h3><button class="mx" onclick="closeModals()"><i class="fas fa-times"></i></button></div>
+<form onsubmit="event.preventDefault();saveAsset()" class="space-y-3"><input type="hidden" id="ast-id">
+<div><label class="fl">Атауы</label><input type="text" id="ast-name" class="fi" required></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Құны (KZT)</label><input type="number" id="ast-cost" class="fi mono" required></div><div><label class="fl">Күні</label><input type="date" id="ast-date" class="fi"></div></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Мерзімі (жыл)</label><input type="number" id="ast-life" class="fi mono" value="3"></div><div><label class="fl">Компания</label><select id="ast-co" class="fsel"><option>SQUARE SERVICE</option><option>KHAIYR TRAVEL</option></select></div></div>
+<button type="submit" class="btn btn-p w-full" style="padding:10px"><i class="fas fa-save mr-1"></i>Сақтау</button></form></div></div>
+
+<div id="modal-note" class="mo"><div class="mb" style="max-width:420px"><div class="mh"><h3>Жазба</h3><button class="mx" onclick="closeModals()"><i class="fas fa-times"></i></button></div>
+<form onsubmit="event.preventDefault();saveNote()" class="space-y-3"><input type="hidden" id="note-id">
+<div><label class="fl">Тақырып</label><input type="text" id="note-title" class="fi" required></div>
+<div><label class="fl">Мазмұны</label><textarea id="note-body" class="fi" rows="5" style="resize:vertical"></textarea></div>
+<div class="grid grid-cols-2 gap-3"><div><label class="fl">Түс</label><select id="note-color" class="fsel"><option value="blue">🔵</option><option value="green">🟢</option><option value="amber">🟡</option><option value="red">🔴</option><option value="purple">🟣</option></select></div><div><label class="fl">Бекіту</label><select id="note-pin" class="fsel"><option value="0">—</option><option value="1">📌</option></select></div></div>
+<button type="submit" class="btn btn-p w-full" style="padding:10px"><i class="fas fa-save mr-1"></i>Сақтау</button></form></div></div>
+
+<div id="print-area" class="hidden"></div>
+<div id="toast-box"></div>
+<script>
+const $=id=>document.getElementById(id);const esc=t=>{if(t==null)return'';return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')};const fmt=n=>{try{return new Intl.NumberFormat('ru-RU').format(Math.round(n))+' ₸'}catch(x){return Math.round(n)+' ₸'}};const setText=(id,v)=>{const el=$(id);if(el)el.textContent=v};const td=()=>new Date().toISOString().slice(0,10);const now=()=>new Date().toLocaleString('kk-KZ');
+const CATEGORIES={income:['Аударма қызметі','Нотариалды аударма','Апостиль','Умра тур сату','Билет сату','Виза қызметі','Кеңес беру','Басқа кіріс'],expense:['Билет сатып алу','Қонақүй','Виза шығыны','Трансфер','Банк комиссиясы','Офис жалдау','Жалақы','Салық төлемі','Маркетинг','Байланыс','Канцтовар','Басқа шығыс']};
+const LEAD_STAGES={new:{label:'🆕 Жаңа',color:'var(--blue)',bg:'rgba(59,130,246,0.1)'},contact:{label:'📞 Байланыс',color:'var(--teal)',bg:'rgba(20,184,166,0.1)'},negotiation:{label:'💬 Келіссөз',color:'var(--amber)',bg:'rgba(245,158,11,0.1)'},proposal:{label:'📋 Ұсыныс',color:'var(--purple)',bg:'rgba(168,85,247,0.1)'},won:{label:'✅ Мәміле',color:'var(--green)',bg:'rgba(16,185,129,0.1)'},lost:{label:'❌ Жоғалды',color:'var(--red)',bg:'rgba(239,68,68,0.1)'}};
+const ORDER_ST={new:{l:'🆕 Жаңа',c:'var(--blue)',s:0},translating:{l:'✍️ Аударылуда',c:'var(--amber)',s:1},review:{l:'🔍 Тексерілуде',c:'var(--purple)',s:2},notary:{l:'📋 Нотариуста',c:'var(--cyan)',s:3},done:{l:'✅ Дайын',c:'var(--green)',s:4},delivered:{l:'📦 Тапсырылды',c:'var(--lime)',s:5},cancelled:{l:'❌ Бас тартылды',c:'var(--red)',s:-1}};
+const MS=['','Қаң','Ақп','Нау','Сәу','Мам','Мау','Шіл','Там','Қыр','Қаз','Қар','Жел'];
+let RATES={KZT:1,USD:510,EUR:555,RUB:5.2,TRY:14.5,SAR:136,AED:139,GBP:650,CNY:70,UZS:0.038};try{const s=localStorage.getItem('SQ_Rates');if(s){const p=JSON.parse(s);if(p&&p.USD)RATES=p}}catch(x){}
+const toKZT=(a,c)=>Math.round((+a||0)*(RATES[c]||1));
+async function fetchRates(){toast('Жаңартылуда...','info');try{const r=await fetch('https://api.exchangerate-api.com/v4/latest/KZT');const d=await r.json();if(d?.rates){const n={KZT:1};for(const c of Object.keys(RATES)){if(c==='KZT')continue;if(d.rates[c])n[c]=Math.round(1/d.rates[c]*100)/100;else n[c]=RATES[c]}RATES=n;localStorage.setItem('SQ_Rates',JSON.stringify(RATES));toast('Бағамдар жаңартылды');R()}}catch(e){toast('Қате','error')}}
+const DEFAULT_TAX={mzp:85000,mrp:3932,opvPct:10,soPct:3.5,socTaxMrp:1,opvrPct:1.5,ipnPct:10,vosmsFree:true};let TAX={...DEFAULT_TAX};try{const s=localStorage.getItem('SQ_TaxCfg');if(s)TAX=JSON.parse(s)}catch(x){}
+// SUPABASE
+const SB_URL='https://oujqwwaekajnyvyfohtm.supabase.co';const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91anF3d2Fla2Fqbnl2eWZvaHRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA0MjQwNDAsImV4cCI6MjA4NjAwMDA0MH0.giQGdjklIbmZVS38oK5GqYunMsA3rs_lmbePyaD7p8g';
+const sb=supabase.createClient(SB_URL,SB_KEY);let CU=null;let offline=false;
+// STATE
+const DS={transactions:[],clients:[],orders:[],employees:[],blanks:[],umrahPackages:[],fixedExpenses:[],assets:[],notes:[],crmHistory:[],invoices:[],salaryRecords:[],auditLog:[]};
+let S=JSON.parse(JSON.stringify(DS));let undoStack=[],redoStack=[];
+function pushUndo(){undoStack.push(JSON.stringify(S));if(undoStack.length>20)undoStack.shift();redoStack=[]}
+function audit(a,d=''){S.auditLog.unshift({id:Date.now(),date:now(),user:CU?.email||'offline',action:a,details:d});if(S.auditLog.length>500)S.auditLog=S.auditLog.slice(0,500)}
+// AUTH
+let authMode='login';
+function switchAuthTab(m){authMode=m;$('tab-login').classList.toggle('active',m==='login');$('tab-register').classList.toggle('active',m==='register');$('auth-btn').innerHTML=m==='login'?'<i class="fas fa-sign-in-alt mr-2"></i>Кіру':'<i class="fas fa-user-plus mr-2"></i>Тіркелу';$('auth-err').style.display='none';$('auth-ok').style.display='none'}
+function showAuthErr(m){$('auth-err').textContent=m;$('auth-err').style.display='block';$('auth-ok').style.display='none'}
+function showAuthOk(m){$('auth-ok').textContent=m;$('auth-ok').style.display='block';$('auth-err').style.display='none'}
+async function handleAuth(){const email=$('auth-email').value.trim(),pass=$('auth-pass').value;if(!email||!pass){showAuthErr('Толтырыңыз');return}$('auth-btn').disabled=true;$('auth-btn').innerHTML='<i class="fas fa-spinner fa-spin mr-2"></i>...';try{let r;if(authMode==='register'){r=await sb.auth.signUp({email,password:pass});if(r.error)throw r.error;if(r.data?.user?.identities?.length===0){showAuthErr('Email тіркелген');$('auth-btn').disabled=false;switchAuthTab('login');return}if(r.data?.session){CU=r.data.user;toast('Тіркелу сәтті!');await initApp();return}showAuthOk('Email растаңыз!');$('auth-btn').disabled=false;switchAuthTab('login');return}else{r=await sb.auth.signInWithPassword({email,password:pass});if(r.error)throw r.error;CU=r.data.user;await initApp()}}catch(e){const m=e.message||'';showAuthErr(m.includes('Invalid')?'Email/құпиясөз қате':m.includes('confirm')?'Email растаңыз':m);$('auth-btn').disabled=false;switchAuthTab(authMode)}}
+function handleOffline(){offline=true;CU=null;initAppOffline()}
+async function handleLogout(){if(!await showConfirm('Жүйеден шығу?','Шығу'))return;try{await sb.auth.signOut()}catch(e){}CU=null;$('main-app').style.display='none';$('auth-screen').style.display='flex';switchAuthTab('login')}
+// SYNC
+function setSyncStatus(s){const el=$('sync-status');if(!el)return;const m={ok:{c:'sync-ok',h:'<i class="fas fa-cloud"></i> ✓'},saving:{c:'sync-saving',h:'<i class="fas fa-sync fa-spin"></i>'},error:{c:'sync-err',h:'<i class="fas fa-exclamation-triangle"></i>'},offline:{c:'sync-offline',h:'<i class="fas fa-wifi-slash"></i>'}};const v=m[s]||m.ok;el.className='sync-badge '+v.c;el.innerHTML=v.h}
+// ============================================================
+// TABLE MAP — БАРЛЫҚ 13 КЕСТЕ ТОЛЫҚ САҚТАЛАДЫ
+// ============================================================
+const TM={
+    transactions:{table:'transactions',fields:t=>({id:t.id,date:t.date,company:t.company,type:t.type,category:t.category,desc:t.desc,amount:t.amount,currency:t.currency,amount_kzt:t.amountKZT||t.amount,client_id:t.clientId,is_transit:t.isTransit||false,status:t.status||'paid',due_date:t.dueDate||null}),from:r=>({id:+r.id,date:r.date,company:r.company,type:r.type,category:r.category,desc:r.desc,amount:+r.amount,currency:r.currency,amountKZT:+r.amount_kzt,clientId:r.client_id?+r.client_id:null,isTransit:r.is_transit,status:r.status,dueDate:r.due_date})},
+    clients:{table:'clients',fields:c=>({id:c.id,name:c.name,phone:c.phone||'',company:c.company||'',client_type:c.clientType||'person',notary_office:c.notaryOffice||'',notary_addr:c.notaryAddr||'',notary_license:c.notaryLicense||'',interest:c.interest||'',lead_status:c.leadStatus||'new',source:c.source||'',note:c.note||''}),from:r=>({id:+r.id,name:r.name,phone:r.phone,company:r.company,clientType:r.client_type,notaryOffice:r.notary_office,notaryAddr:r.notary_addr,notaryLicense:r.notary_license,interest:r.interest,leadStatus:r.lead_status,source:r.source,note:r.note})},
+    orders:{table:'orders',fields:o=>({id:o.id,client_id:o.clientId,translator_id:o.translatorId,lang_from:o.langFrom||'',lang_to:o.langTo||'',pages:o.pages||1,price:o.price||0,deadline:o.deadline||null,service:o.service||'',status:o.status||'new',notes:o.notes||'',created_at:o.createdAt||null}),from:r=>({id:+r.id,clientId:r.client_id?+r.client_id:null,translatorId:r.translator_id?+r.translator_id:null,langFrom:r.lang_from,langTo:r.lang_to,pages:+r.pages,price:+r.price,deadline:r.deadline,service:r.service,status:r.status,notes:r.notes,createdAt:r.created_at})},
+    employees:{table:'employees',fields:e=>({id:e.id,name:e.name,position:e.position||'',phone:e.phone||'',langs:e.langs||'',salary:e.salary||0,rate:e.rate||0,hire_date:e.hireDate||null}),from:r=>({id:+r.id,name:r.name,position:r.position,phone:r.phone,langs:r.langs,salary:+r.salary,rate:+r.rate,hireDate:r.hire_date})},
+    blanks:{table:'blanks',fields:b=>({id:b.id,notary_name:b.notaryName||'',city:b.city||'',date:b.date||null,license:b.license||'',license_date:b.licenseDate||null,license_org:b.licenseOrg||'',reg_num:b.regNum||'',code:b.code||'',signer:b.signer||'',signer_iin:b.signerIIN||'',purpose:b.purpose||'',note:b.note||'',status:b.status||'active'}),from:r=>({id:+r.id,notaryName:r.notary_name,city:r.city,date:r.date,license:r.license,licenseDate:r.license_date,licenseOrg:r.license_org,regNum:r.reg_num,code:r.code,signer:r.signer,signerIIN:r.signer_iin,purpose:r.purpose,note:r.note,status:r.status})},
+    umrahPackages:{table:'umrah_packages',fields:u=>({id:u.id,date:u.date,rows:JSON.stringify(u.rows||[]),sell:u.sell||0,ppl:u.ppl||1}),from:r=>({id:+r.id,date:r.date,rows:typeof r.rows==='string'?JSON.parse(r.rows):(r.rows||[]),sell:+r.sell,ppl:+r.ppl})},
+    fixedExpenses:{table:'fixed_expenses',fields:f=>({id:f.id,name:f.name,amount:f.amount,company:f.company||'',category:f.category||''}),from:r=>({id:+r.id,name:r.name,amount:+r.amount,company:r.company,category:r.category})},
+    assets:{table:'assets',fields:a=>({id:a.id,name:a.name,cost:a.cost,date:a.date||null,life_years:a.lifeYears||3,company:a.company||''}),from:r=>({id:+r.id,name:r.name,cost:+r.cost,date:r.date,lifeYears:+r.life_years,company:r.company})},
+    notes:{table:'notes',fields:n=>({id:n.id,title:n.title,body:n.body||'',color:n.color||'blue',pinned:n.pinned||false}),from:r=>({id:+r.id,title:r.title,body:r.body,color:r.color,pinned:r.pinned})},
+    crmHistory:{table:'crm_history',fields:h=>({id:h.id,client_id:h.clientId,client_name:h.clientName,from_status:h.from,to_status:h.to,date:h.date}),from:r=>({id:+r.id,clientId:r.client_id?+r.client_id:null,clientName:r.client_name,from:r.from_status,to:r.to_status,date:r.date})},
+    invoices:{table:'invoices',fields:i=>({id:i.id,num:String(i.num),date:i.date,company:i.company||'sq',buyer_name:i.buyerName||'',buyer_bin:i.buyerBin||'',buyer_addr:i.buyerAddr||'',contract:i.contract||'',rows:JSON.stringify(i.rows||[]),total:i.total||0}),from:r=>({id:+r.id,num:r.num,date:r.date,company:r.company,buyerName:r.buyer_name,buyerBin:r.buyer_bin,buyerAddr:r.buyer_addr,contract:r.contract,rows:typeof r.rows==='string'?JSON.parse(r.rows):(r.rows||[]),total:+r.total})},
+    salaryRecords:{table:'salary_records',fields:s=>({id:s.id,employee_id:s.employeeId,period:s.period||'',base:s.base||0,order_pay:s.orderPay||0,total:s.total||0,paid:s.paid||false,date:s.date||null}),from:r=>({id:+r.id,employeeId:r.employee_id?+r.employee_id:null,period:r.period,base:+r.base,orderPay:+r.order_pay,total:+r.total,paid:r.paid,date:r.date})},
+    auditLog:{table:'audit_log',fields:a=>({id:a.id,date:a.date,action:a.action,details:a.details||'',user_email:a.user||''}),from:r=>({id:+r.id,date:r.date,action:r.action,details:r.details,user:r.user_email})}
+};
+
+// ============================================================
+// NETWORK STATUS + PENDING QUEUE (офлайн очередь)
+// ============================================================
+let isOnline=navigator.onLine;
+let pendingQueue=[]; // Оффлайн режимде жиналған өзгерістер
+try{const q=localStorage.getItem('SQP9_pending');if(q)pendingQueue=JSON.parse(q)||[]}catch(x){}
+function savePendingQueue(){try{localStorage.setItem('SQP9_pending',JSON.stringify(pendingQueue))}catch(x){}}
+window.addEventListener('online',()=>{isOnline=true;setSyncStatus(CU?'saving':'offline');if(CU&&pendingQueue.length){toast('🌐 Желі қалпына келді, синхронизация...','info');cloudSave()}});
+window.addEventListener('offline',()=>{isOnline=false;setSyncStatus('offline');toast('📴 Желі жоқ, жергілікті сақталады','info')});
+
+// ============================================================
+// CLOUD LOAD — user_id фильтрі + retry + бөлек кесте қатесі
+// ============================================================
+async function cloudLoad(){
+    if(!CU)return null;
+    const st={...JSON.parse(JSON.stringify(DS))};
+    let anySuccess=false,anyError=false;
+    for(const[k,c]of Object.entries(TM)){
+        try{
+            const{data,error}=await sb.from(c.table).select('*').eq('user_id',CU.id).order('id',{ascending:false}).limit(5000);
+            if(error){console.warn('cloudLoad table '+c.table+':',error.message);anyError=true;continue}
+            st[k]=(data||[]).map(c.from);
+            anySuccess=true;
+        }catch(e){console.warn('cloudLoad exception '+c.table+':',e);anyError=true}
+    }
+    if(!anySuccess)return null;
+    if(anyError)toast('⚠ Кей кестелер жүктелмеді','info');
+    return st;
+}
+
+// ============================================================
+// CLOUD SAVE — UPSERT + ORPHAN DELETE (қауіпсіз стратегия)
+// ============================================================
+let _st=null,_saveInProgress=false;
+async function cloudSave(){
+    savLocal(); // Алдымен жергілікті сақтау — ЕШҚАШАН жоғалмасын
+    if(offline||!CU){return}
+    if(!isOnline){
+        // Өзгеріс орын алды, бірақ желі жоқ — белгілі уақыттан кейін қайта әрекет
+        setSyncStatus('offline');
+        if(!pendingQueue.includes('sync'))pendingQueue.push('sync');
+        savePendingQueue();
+        return;
+    }
+    setSyncStatus('saving');
+    clearTimeout(_st);
+    _st=setTimeout(async()=>{
+        if(_saveInProgress){clearTimeout(_st);_st=setTimeout(cloudSave,2000);return}
+        _saveInProgress=true;
+        try{
+            for(const[k,c]of Object.entries(TM)){
+                const items=(S[k]||[]);
+                const rows=items.map(i=>({...c.fields(i),user_id:CU.id}));
+                // 1. UPSERT — ағымдағы жолдарды енгізу/жаңарту (ескіні өшірмей)
+                if(rows.length>0){
+                    for(let j=0;j<rows.length;j+=500){
+                        const chunk=rows.slice(j,j+500);
+                        const{error}=await sb.from(c.table).upsert(chunk,{onConflict:'id'});
+                        if(error){console.warn('upsert '+c.table+':',error.message);throw error}
+                    }
+                }
+                // 2. ORPHAN DELETE — жергілікті жойылған жолдарды бұлттан да жою
+                try{
+                    let dq=sb.from(c.table).delete().eq('user_id',CU.id);
+                    if(items.length>0){
+                        const ids=items.map(i=>i.id).filter(id=>id!=null);
+                        if(ids.length)dq=dq.not('id','in','('+ids.join(',')+')');
+                    }
+                    const{error:de}=await dq;
+                    if(de)console.warn('orphan delete '+c.table+':',de.message);
+                }catch(e){console.warn('orphan delete exception '+c.table+':',e)}
+            }
+            pendingQueue=pendingQueue.filter(x=>x!=='sync');
+            savePendingQueue();
+            setSyncStatus('ok');
+        }catch(e){
+            console.error('cloudSave error:',e);
+            setSyncStatus('error');
+            if(!pendingQueue.includes('sync'))pendingQueue.push('sync');
+            savePendingQueue();
+            toast('Бұлт қатесі — жергілікті сақталды','error');
+        }finally{_saveInProgress=false}
+    },1200); // debounce 1.2 сек — аздаған бірнеше өзгерісті біріктіру
+}
+
+// ============================================================
+// Жергілікті сақтау (әрқашан істейді)
+// ============================================================
+function savLocal(){
+    try{localStorage.setItem('SQP9',JSON.stringify(S))}
+    catch(e){
+        if(e.name==='QuotaExceededError'||e.code===22){
+            toast('⚠ Жергілікті жады толды! JSON экспорт жасаңыз','error');
+            // Аудит логты қысқарту — ол ең көп орын алады
+            if(S.auditLog?.length>50){S.auditLog=S.auditLog.slice(0,50);try{localStorage.setItem('SQP9',JSON.stringify(S))}catch(x){}}
+        }
+    }
+}
+
+function autoSave(){savLocal();if(!offline&&CU)cloudSave()}
+function sav(){autoSave();toast('💾 Сақталды')}
+// ============================================================
+// INIT — Қосымша: DOMContentLoaded + auth listener + миграция
+// ============================================================
+async function initApp(){
+    $('auth-screen').style.display='none';$('main-app').style.display='flex';offline=false;setSyncStatus('saving');
+    // Ескі деректер миграциясы (бұлт бос болса ғана)
+    await tryMigrateOldLocalData();
+    // Бұлттан жүктеу
+    const cd=isOnline?await cloudLoad():null;
+    if(cd){
+        // Бұлттың деректерін жергіліктімен біріктіру: локальда артық болса да сақтаймыз
+        const merged=mergeCloudWithLocal(cd);
+        S=merged;savLocal();setSyncStatus('ok');
+        // Егер жергілікте қалған өзгеріс болса (pending) — бұлтқа жіберу
+        if(pendingQueue.includes('sync'))setTimeout(cloudSave,500);
+    }else{
+        loadLocal();setSyncStatus(isOnline?'error':'offline');
+        if(!isOnline)toast('📴 Оффлайн режим — жергілікті деректер','info');
+    }
+    startApp();
+}
+
+async function tryMigrateOldLocalData(){
+    // Ескі кілттерді тексеру: SquareProState және SQP9 екі нұсқа
+    try{
+        const old=localStorage.getItem('SquareProState');
+        if(!old)return;
+        const p=JSON.parse(old);
+        if(!p?.transactions?.length)return;
+        // Бұлтта бар ма?
+        const{data,error}=await sb.from('transactions').select('id').eq('user_id',CU.id).limit(1);
+        if(error||(data&&data.length>0))return; // Бұлтта деректер бар — миграция қажет емес
+        // Локалде SQP9 де бар ма?
+        const cur=localStorage.getItem('SQP9');
+        if(cur){const pc=JSON.parse(cur);if(pc?.transactions?.length)return}
+        S=p;Object.keys(DS).forEach(k=>{if(!S[k])S[k]=[]});
+        toast('📦 Ескі деректер бұлтқа көшірілуде...','info');
+        await cloudSave();
+        toast('✅ Деректер бұлтқа көшірілді');
+    }catch(x){console.warn('migrate:',x)}
+}
+
+function mergeCloudWithLocal(cloud){
+    // Егер жергілікте бұлтқа жіберілмеген өзгерістер бар болса — солардың ескірмегенін тексеру
+    // Қарапайым стратегия: бұлт ақпараты басым, бірақ жергіліктегі id-лер қосылады
+    const merged={...JSON.parse(JSON.stringify(DS))};
+    Object.keys(DS).forEach(k=>{
+        const cloudItems=cloud[k]||[];
+        merged[k]=cloudItems;
+        // Егер pending бар және жергілікте артық item бар болса — қосу
+        if(pendingQueue.length){
+            try{
+                const localRaw=localStorage.getItem('SQP9');
+                if(localRaw){
+                    const local=JSON.parse(localRaw);
+                    const localItems=local[k]||[];
+                    const cloudIds=new Set(cloudItems.map(x=>x.id));
+                    localItems.forEach(li=>{if(!cloudIds.has(li.id))merged[k].push(li)});
+                }
+            }catch(x){}
+        }
+    });
+    return merged;
+}
+
+function initAppOffline(){
+    $('auth-screen').style.display='none';$('main-app').style.display='flex';
+    setSyncStatus('offline');loadLocal();startApp();
+}
+function loadLocal(){
+    try{
+        const r=localStorage.getItem('SQP9')||localStorage.getItem('SquareProState');
+        if(r){const p=JSON.parse(r);if(p){S=p;Object.keys(DS).forEach(k=>{if(!S[k])S[k]=[]})}}
+    }catch(x){S=JSON.parse(JSON.stringify(DS))}
+}
+function startApp(){populateYears();pmo();initUmrahRows();initInvRows();$('inv-date').valueAsDate=new Date();R()}
+
+// DOMContentLoaded — бастапқы сеансты тексеру
+document.addEventListener('DOMContentLoaded',async()=>{
+    try{
+        const{data}=await sb.auth.getSession();
+        if(data?.session?.user){CU=data.session.user;await initApp()}
+    }catch(e){console.warn('session check:',e)}
+});
+
+// Auth state change — токен жарамсыз болса, сеанс аяқталса — логин экранына қайту
+sb.auth.onAuthStateChange((event,session)=>{
+    if(event==='SIGNED_OUT'||!session){
+        if(CU){CU=null;$('main-app').style.display='none';$('auth-screen').style.display='flex';switchAuthTab('login')}
+    }else if(event==='TOKEN_REFRESHED'&&session?.user){
+        CU=session.user;
+    }
+});
+// NAV
+const TABS=['dash','orders','tx','cl','crm','debt','tax','invoice','salary','blanks','employees','umrah','cur','fixed','assets','notes','audit','settings'];
+const TT={dash:'<i class="fas fa-chart-pie mr-2" style="color:var(--blue)"></i>Басты бет',orders:'<i class="fas fa-clipboard-list mr-2" style="color:var(--amber)"></i>Тапсырыстар',tx:'<i class="fas fa-arrow-right-arrow-left mr-2" style="color:var(--green)"></i>Транзакциялар',cl:'<i class="fas fa-users mr-2" style="color:var(--purple)"></i>Клиенттер',crm:'<i class="fas fa-funnel-dollar mr-2" style="color:var(--gold)"></i>CRM',debt:'<i class="fas fa-hand-holding-dollar mr-2" style="color:var(--red)"></i>Қарыздар',tax:'<i class="fas fa-calculator mr-2" style="color:var(--amber)"></i>Салық',invoice:'<i class="fas fa-file-invoice-dollar mr-2" style="color:var(--gold)"></i>Инвойс',salary:'<i class="fas fa-money-check-alt mr-2" style="color:var(--green)"></i>Жалақы',blanks:'<i class="fas fa-stamp mr-2" style="color:var(--purple)"></i>Бланктер',employees:'<i class="fas fa-id-badge mr-2" style="color:var(--cyan)"></i>Қызметкерлер',umrah:'<i class="fas fa-mosque mr-2" style="color:var(--gold)"></i>Умра',cur:'<i class="fas fa-coins mr-2" style="color:var(--amber)"></i>Валюта',fixed:'<i class="fas fa-rotate mr-2" style="color:var(--teal)"></i>Шығындар',assets:'<i class="fas fa-laptop mr-2" style="color:var(--blue)"></i>Активтер',notes:'<i class="fas fa-sticky-note mr-2" style="color:var(--amber)"></i>Жазбалар',audit:'<i class="fas fa-shield-halved mr-2" style="color:var(--cyan)"></i>Аудит',settings:'<i class="fas fa-cog mr-2" style="color:var(--blue)"></i>Баптаулар'};
+function go(id){document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));const n=$('n-'+id);if(n)n.classList.add('on');TABS.forEach(t=>{const v=$('v-'+t);if(v)v.classList.add('hidden')});const v=$('v-'+id);if(v)v.classList.remove('hidden');$('page-title').innerHTML=TT[id]||id;document.querySelectorAll('.mn-item').forEach(x=>x.classList.remove('on'));const mm={dash:0,orders:1,tx:2,cl:3};if(mm[id]!==undefined){const it=document.querySelectorAll('.mn-item');if(it[mm[id]])it[mm[id]].classList.add('on')}if(window.innerWidth<=768)closeSidebar();R()}
+function toggleSidebar(){$('sidebar').classList.toggle('open');$('mob-overlay').classList.toggle('show')}
+function closeSidebar(){$('sidebar').classList.remove('open');$('mob-overlay').classList.remove('show')}
+function closeModals(){document.querySelectorAll('.mo').forEach(m=>m.classList.remove('show'))}
+function toast(msg,type='success'){const box=$('toast-box');const cl={success:'#10B981',error:'#EF4444',info:'#3B82F6'};const ic={success:'check-circle',error:'exclamation-circle',info:'info-circle'};const d=document.createElement('div');d.className='ti';d.style.background=cl[type]||cl.success;d.innerHTML=`<i class="fas fa-${ic[type]}"></i> ${esc(msg)}`;box.appendChild(d);setTimeout(()=>{d.style.opacity='0';d.style.transition='opacity .3s';setTimeout(()=>d.remove(),300)},3000)}
+
+// ============================================================
+// CUSTOM CONFIRM — браузер confirm() орнына әдемі модал
+// ============================================================
+function showConfirm(title,okText='Иә',dangerous=false){
+    return new Promise(resolve=>{
+        const ov=document.createElement('div');
+        ov.className='mo show';ov.style.zIndex='10000';
+        ov.innerHTML=`<div class="mb" style="max-width:340px;text-align:center;padding:20px">
+            <div style="font-size:32px;margin-bottom:10px">${dangerous?'⚠️':'❓'}</div>
+            <div style="font-size:13px;font-weight:600;margin-bottom:16px;color:var(--t1)">${esc(title)}</div>
+            <div style="display:flex;gap:8px">
+                <button class="btn btn-g" data-action="cancel" style="flex:1;padding:10px">Болдырмау</button>
+                <button class="btn ${dangerous?'btn-d':'btn-p'}" data-action="ok" style="flex:1;padding:10px">${esc(okText)}</button>
+            </div>
+        </div>`;
+        document.body.appendChild(ov);
+        const cleanup=(result)=>{ov.remove();resolve(result)};
+        ov.querySelector('[data-action="ok"]').onclick=()=>cleanup(true);
+        ov.querySelector('[data-action="cancel"]').onclick=()=>cleanup(false);
+        ov.addEventListener('click',e=>{if(e.target===ov)cleanup(false)});
+    });
+}
+// Жай confirm() орнына қолдану үшін, бұрынғы код бұзылмайды:
+// if(!confirm('...')) → if(!await showConfirm('...'))
+// Бірақ қазіргі функциялар sync — wrapper жасаймыз:
+window._origConfirm=window.confirm;
+// Browser confirm-ді тек жедел жағдайларда қалдырамыз
+// PERIOD
+function populateYears(){const y=new Set();S.transactions.forEach(t=>{if(t.date)y.add(t.date.substring(0,4))});y.add(String(new Date().getFullYear()));const s=$('gy');s.innerHTML='<option value="all">Барлығы</option>';[...y].sort().reverse().forEach(v=>{s.innerHTML+=`<option value="${v}">${v}</option>`})}
+function pmo(){const s=$('gm'),y=$('gy').value;s.innerHTML='<option value="all">Барлығы</option>';if(y==='all')return;MS.slice(1).forEach((m,i)=>{s.innerHTML+=`<option value="${String(i+1).padStart(2,'0')}">${m}</option>`})}
+function gfp(){const y=$('gy').value,m=$('gm').value;return S.transactions.filter(t=>{if(y!=='all'&&!t.date.startsWith(y))return false;if(m!=='all'&&t.date.substring(5,7)!==m)return false;return true})}
+function calcT(txs){let i=0,e=0,tr=0;txs.forEach(t=>{const a=+(t.amountKZT||t.amount)||0;if(t.isTransit)tr+=a;else if(t.type==='income')i+=a;else e+=a});const n=i-e;return{income:i,expense:e,transit:tr,net:n,tax:Math.max(0,Math.round(n*(TAX.ipnPct/100)))}}
+// MAIN RENDER
+let txPage=1;const TPP=40;function txPageChange(d){txPage=Math.max(1,txPage+d);R()}
+function R(){const pt=gfp();const{income,expense,transit,net,tax}=calcT(pt);const an=document.querySelector('.ni.on');const ct=an?an.id.replace('n-',''):'dash';
+const dcf=$('dash-co-filter')?.value||'all';const dt=dcf==='all'?pt:pt.filter(t=>t.company===dcf);const d=calcT(dt);
+const dc=$('dash-cards');if(dc)dc.innerHTML=`<div class="sc"><div class="sl">Кіріс</div><div class="sv mono" style="color:var(--green)">${fmt(d.income)}</div></div><div class="sc"><div class="sl">Шығыс</div><div class="sv mono" style="color:var(--red)">${fmt(d.expense)}</div></div><div class="sc"><div class="sl">Пайда</div><div class="sv mono" style="color:var(--blue)">${fmt(d.net)}</div></div><div class="sc"><div class="sl">Транзит</div><div class="sv mono" style="color:var(--amber)">${fmt(d.transit)}</div></div><div class="sc"><div class="sl">Тапсырыс</div><div class="sv mono" style="color:var(--purple)">${S.orders.filter(o=>!['cancelled','delivered'].includes(o.status)).length}</div></div>`;
+renderTrend(dt);renderDashOrders();
+const sr=[...dt].sort((a,b)=>new Date(b.date)-new Date(a.date)||b.id-a.id);const rl=$('recent-list');if(rl){if(!sr.length)rl.innerHTML='<div style="text-align:center;color:var(--t3);padding:10px;font-size:10px">—</div>';else rl.innerHTML=sr.slice(0,7).map(t=>{const c=t.isTransit?'var(--amber)':(t.type==='income'?'var(--green)':'var(--red)');const p=t.isTransit?'↔':(t.type==='income'?'+':'−');const cl=t.clientId?S.clients.find(x=>x.id===t.clientId):null;return`<div class="sc" style="padding:7px 10px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:10.5px;font-weight:600">${esc(t.desc||t.category)}</div><div style="font-size:8.5px;color:var(--t3)">${esc(t.company)}${cl?' • '+esc(cl.name):''}</div></div><div class="mono font-bold" style="color:${c};font-size:10.5px">${p}${fmt(t.amountKZT||t.amount)}</div></div>`}).join('')}
+if(ct==='tx')renderTx(pt);if(ct==='cl'||ct==='crm')renderCl();if(ct==='crm')renderCRM();if(ct==='debt')renderDebt(pt);if(ct==='tax')renderTax(pt,income,expense,net,tax);if(ct==='cur'){convertCur();renderRG()}if(ct==='umrah')renderUS();if(ct==='fixed')renderFixed();if(ct==='assets')renderAssets();if(ct==='notes')renderNotes();if(ct==='invoice')renderIS();if(ct==='orders')renderOrders();if(ct==='blanks')renderBlanks();if(ct==='employees')renderEmp();if(ct==='salary')renderSalary();if(ct==='audit')renderAudit();if(ct==='settings')loadSettingsUI()}
+// TREND
+function renderTrend(txs){const c=$('dash-trend'),l=$('dash-trend-labels');if(!c||!l)return;const map={};txs.forEach(t=>{if(t.isTransit)return;const m=t.date?.substring(0,7);if(!m)return;if(!map[m])map[m]={i:0,e:0};const a=+(t.amountKZT||t.amount)||0;if(t.type==='income')map[m].i+=a;else map[m].e+=a});const months=Object.keys(map).sort().slice(-12);if(!months.length){c.innerHTML='<div style="text-align:center;color:var(--t3);font-size:10px;width:100%;padding:12px">—</div>';l.innerHTML='';return}const mx=Math.max(...months.map(m=>Math.max(map[m].i,map[m].e)),1);c.innerHTML=months.map(m=>`<div class="trend-bar-group"><div class="trend-bar" style="height:${Math.max(2,Math.round(map[m].i/mx*100))}%;background:var(--green)"><div class="trend-tip">+${fmt(map[m].i)}</div></div><div class="trend-bar" style="height:${Math.max(2,Math.round(map[m].e/mx*100))}%;background:var(--red)"><div class="trend-tip">-${fmt(map[m].e)}</div></div></div>`).join('');l.innerHTML=months.map(m=>`<div class="trend-label">${MS[+m.split('-')[1]]}</div>`).join('')}
+function renderDashOrders(){const el=$('dash-orders');if(!el)return;const a=S.orders.filter(o=>!['delivered','cancelled'].includes(o.status)).slice(0,5);if(!a.length){el.innerHTML='<div style="text-align:center;color:var(--t3);font-size:10px;padding:6px">—</div>';return}el.innerHTML=a.map(o=>{const st=ORDER_ST[o.status]||ORDER_ST.new;const cl=o.clientId?S.clients.find(c=>c.id===o.clientId):null;return`<div class="sc" style="padding:7px 10px"><div class="flex justify-between items-center"><div><div style="font-size:10.5px;font-weight:600">${cl?esc(cl.name):'—'} <span style="color:var(--t3);font-size:8.5px">${esc(o.langFrom)}→${esc(o.langTo)}</span></div><div style="font-size:8.5px;color:var(--t3)">${esc(o.service)} • ${o.pages}бет</div></div><span class="b" style="background:${st.c}18;color:${st.c}">${st.l}</span></div><div class="pipeline">${[0,1,2,3,4,5].map(i=>`<div class="pipe-step ${i<(st.s>=0?st.s:0)?'done':i===(st.s>=0?st.s:0)?'active':''}"></div>`).join('')}</div></div>`}).join('')}
+// TRANSACTIONS
+function renderTx(pt){const s=($('search-input')?.value||'').toLowerCase();const fCo=$('filter-co')?.value||'all';const fCat=$('filter-cat')?.value||'all';const all=[...pt].sort((a,b)=>new Date(b.date)-new Date(a.date)||b.id-a.id);const fl=all.filter(t=>{const cl=t.clientId?S.clients.find(c=>c.id===t.clientId):null;const cn=cl?cl.name.toLowerCase():'';const ms=(t.desc||'').toLowerCase().includes(s)||(t.company||'').toLowerCase().includes(s)||(t.category||'').toLowerCase().includes(s)||cn.includes(s);return ms&&(fCo==='all'||t.company===fCo)&&(fCat==='all'||t.category===fCat)});const tp=Math.max(1,Math.ceil(fl.length/TPP));if(txPage>tp)txPage=tp;const ps=(txPage-1)*TPP;const pi=fl.slice(ps,ps+TPP);const tb=$('tx-body'),nd=$('no-data');if(tb){tb.innerHTML='';if(!fl.length){if(nd)nd.classList.remove('hidden')}else{if(nd)nd.classList.add('hidden');pi.forEach(t=>{const cl=t.clientId?S.clients.find(c=>c.id===t.clientId):null;const ac=t.isTransit?'var(--amber)':(t.type==='income'?'var(--green)':'var(--red)');const cb=t.currency&&t.currency!=='KZT'?`<span class="b b-cat">${esc(t.currency)} ${(+t.amount).toLocaleString()}</span>`:'';const tr=document.createElement('tr');tr.innerHTML=`<td>${esc(t.date)}</td><td><span class="b ${t.company==='SQUARE SERVICE'?'b-sq':'b-kh'}">${t.company==='SQUARE SERVICE'?'SQ':'KH'}</span></td><td style="color:var(--t1);font-weight:500">${esc(t.category)}</td><td>${esc(t.desc)}</td><td style="font-size:10px">${cl?esc(cl.name):'—'}</td><td>${cb}</td><td><span class="b ${t.status==='unpaid'?'b-unpaid':'b-paid'}">${t.status==='unpaid'?'Қарыз':'✓'}</span>${t.isTransit?' <span class="b b-transit">↔</span>':''}</td><td style="text-align:right" class="mono font-bold"><span style="color:${ac}">${fmt(t.amountKZT||t.amount)}</span></td><td style="text-align:center;white-space:nowrap"><button onclick="editTx(${t.id})" style="color:var(--amber);background:none;border:none;cursor:pointer;padding:2px"><i class="fas fa-pen"></i></button> <button onclick="deleteTx(${t.id})" style="color:var(--red);background:none;border:none;cursor:pointer;padding:2px"><i class="fas fa-trash"></i></button></td>`;tb.appendChild(tr)})}}const p2=$('tx-page-info');if(p2)p2.textContent=fl.length?`${ps+1}–${Math.min(ps+TPP,fl.length)} / ${fl.length}`:'';const pn=$('tx-page-num');if(pn)pn.textContent=tp>1?`${txPage}/${tp}`:'';const ft=calcT(fl);setText('sum-inc',fmt(ft.income));setText('sum-exp',fmt(ft.expense));setText('sum-net',fmt(ft.net));const cs=$('filter-cat');if(cs){const cur=cs.value;const cats=new Set();S.transactions.forEach(t=>{if(t.category)cats.add(t.category)});cs.innerHTML='<option value="all">Барлығы</option>';[...cats].sort().forEach(c=>{cs.innerHTML+=`<option value="${esc(c)}" ${c===cur?'selected':''}>${esc(c)}</option>`})}}
+function populateModalCats(){const t=$('tx-type').value;$('tx-cat').innerHTML=(CATEGORIES[t]||[]).map(c=>`<option>${esc(c)}</option>`).join('')}
+function populateModalClients(){const s=$('tx-client');s.innerHTML='<option value="">—</option>';S.clients.forEach(c=>{s.innerHTML+=`<option value="${c.id}">${esc(c.name)}</option>`})}
+function updateKztPreview(){const a=parseFloat($('tx-amt')?.value)||0;const c=$('tx-cur').value;$('tx-kzt').value=c==='KZT'?fmt(a):fmt(toKZT(a,c))}
+function oTx(){$('modal-tx').classList.add('show');$('modal-tx-title').textContent='Жаңа транзакция';$('tx-id').value='';$('tx-type').value='income';$('tx-date').valueAsDate=new Date();$('tx-desc').value='';$('tx-amt').value='';$('tx-cur').value='KZT';$('tx-kzt').value='';$('tx-transit').checked=false;$('tx-status').value='paid';$('tx-due').value='';document.querySelector('#tx-co-sq').checked=true;populateModalCats();populateModalClients();setTimeout(()=>$('tx-amt').focus(),100)}
+function saveTx(){const id=$('tx-id').value;const co=document.querySelector('input[name="tx-co"]:checked')?.value||'SQUARE SERVICE';const type=$('tx-type').value;const date=$('tx-date').value;const cat=$('tx-cat').value;const desc=$('tx-desc').value.trim();const amt=parseFloat($('tx-amt').value);const cur=$('tx-cur').value;const cId=$('tx-client').value?parseInt($('tx-client').value):null;const tr=$('tx-transit').checked&&type==='expense';const st=$('tx-status').value;const due=$('tx-due').value||null;if(!date||!amt||amt<=0){toast('Толтырыңыз','error');return}pushUndo();const kzt=cur==='KZT'?Math.round(amt):toKZT(amt,cur);const tx={id:id?parseInt(id):Date.now(),date,company:co,type,category:cat,desc:desc||cat,amount:Math.round(amt*100)/100,currency:cur,amountKZT:kzt,clientId:cId,isTransit:tr,status:st,dueDate:due};if(id){const i=S.transactions.findIndex(t=>t.id===parseInt(id));if(i!==-1)S.transactions[i]=tx}else S.transactions.unshift(tx);audit('Транзакция',esc(desc||cat));autoSave();closeModals();R();toast('✅ Сақталды')}
+function editTx(id){const t=S.transactions.find(x=>x.id===id);if(!t)return;oTx();$('modal-tx-title').textContent='Түзету';$('tx-id').value=t.id;$('tx-type').value=t.type;populateModalCats();$('tx-cat').value=t.category||'';populateModalClients();$('tx-client').value=t.clientId||'';$('tx-date').value=t.date;$('tx-desc').value=t.desc||'';$('tx-amt').value=t.amount;$('tx-cur').value=t.currency||'KZT';$('tx-transit').checked=t.isTransit;$('tx-status').value=t.status||'paid';$('tx-due').value=t.dueDate||'';const r=document.querySelector(`input[name="tx-co"][value="${t.company}"]`);if(r)r.checked=true;updateKztPreview()}
+async function deleteTx(id){if(!await showConfirm('Транзакцияны өшіру керек пе?','Өшіру',true))return;pushUndo();S.transactions=S.transactions.filter(t=>t.id!==id);audit('Транзакция өшірілді');autoSave();R();toast('🗑 Өшірілді')}
+// CLIENTS
+function waLink(p){if(!p)return null;return'https://wa.me/'+p.replace(/[^0-9+]/g,'').replace(/^8/,'+7').replace('+','')}
+function renderCl(){const g=$('cl-grid');if(!g)return;const ft=$('cl-filter-type')?.value||'all';const fl=$('cl-filter-lead')?.value||'all';const s=($('cl-search')?.value||'').toLowerCase();let f=S.clients;if(s)f=f.filter(c=>c.name.toLowerCase().includes(s)||(c.phone||'').includes(s));if(ft!=='all')f=f.filter(c=>(c.clientType||'person')===ft);if(fl!=='all')f=f.filter(c=>(c.leadStatus||'new')===fl);if(!f.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--t3);padding:16px">—</div>';return}g.innerHTML=f.map(c=>{const tc=S.transactions.filter(t=>t.clientId===c.id).length;const inc=S.transactions.filter(t=>t.clientId===c.id&&t.type==='income'&&!t.isTransit).reduce((s,t)=>s+(+(t.amountKZT||t.amount)||0),0);const ld=LEAD_STAGES[c.leadStatus||'new']||LEAD_STAGES.new;const wa=waLink(c.phone);const nt=(c.clientType||'person')==='notary';return`<div class="sc"${nt?' style="border-left:3px solid var(--purple)"':''}><div class="flex items-center gap-3 mb-2"><div style="width:30px;height:30px;border-radius:7px;background:${ld.bg};display:flex;align-items:center;justify-content:center;color:${ld.color};font-weight:700;font-size:12px">${nt?'⚖️':esc(c.name.charAt(0))}</div><div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:600">${esc(c.name)}</div><div style="font-size:8.5px;color:var(--t3)">${c.phone?esc(c.phone):''}${c.company?' • '+esc(c.company):''}</div></div>${wa?`<a href="${wa}" target="_blank" style="width:26px;height:26px;border-radius:6px;background:rgba(37,211,102,.12);display:flex;align-items:center;justify-content:center;color:#25D366;text-decoration:none"><i class="fab fa-whatsapp" style="font-size:12px"></i></a>`:''}</div><div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:3px"><span class="b" style="background:${ld.bg};color:${ld.color}">${ld.label}</span>${c.interest?`<span class="b b-cat">${esc(c.interest)}</span>`:''}</div><div class="flex justify-between" style="font-size:9px;color:var(--t2);border-top:1px solid var(--brd);padding-top:3px;margin-top:2px"><span>${tc} тр.</span><span class="mono font-bold" style="color:var(--green)">${fmt(inc)}</span></div><div class="flex gap-2 mt-1"><button onclick="editCl(${c.id})" style="color:var(--amber);background:none;border:none;cursor:pointer;font-size:9px"><i class="fas fa-pen"></i></button><button onclick="deleteCl(${c.id})" style="color:var(--red);background:none;border:none;cursor:pointer;font-size:9px"><i class="fas fa-trash"></i></button></div></div>`}).join('')}
+function toggleNotaryFields(){$('notary-fields').style.display=$('cl-type').value==='notary'?'block':'none'}
+function oCl(){$('modal-cl').classList.add('show');$('modal-cl-title').textContent='Жаңа клиент';['cl-id','cl-name','cl-phone','cl-notary-office','cl-notary-addr','cl-notary-license','cl-note'].forEach(id=>$(id).value='');$('cl-co').value='';$('cl-type').value='person';toggleNotaryFields();$('cl-interest').value='';$('cl-lead').value='new';$('cl-source').value=''}
+function editCl(id){const c=S.clients.find(x=>x.id===id);if(!c)return;$('modal-cl').classList.add('show');$('modal-cl-title').textContent='Түзету';$('cl-id').value=c.id;$('cl-name').value=c.name;$('cl-phone').value=c.phone||'';$('cl-co').value=c.company||'';$('cl-type').value=c.clientType||'person';toggleNotaryFields();$('cl-notary-office').value=c.notaryOffice||'';$('cl-notary-addr').value=c.notaryAddr||'';$('cl-notary-license').value=c.notaryLicense||'';$('cl-interest').value=c.interest||'';$('cl-lead').value=c.leadStatus||'new';$('cl-source').value=c.source||'';$('cl-note').value=c.note||''}
+function saveCl(){const eId=$('cl-id').value;const nm=$('cl-name').value.trim();if(!nm){toast('Атын жазыңыз','error');return}pushUndo();const obj={id:eId?parseInt(eId):Date.now(),name:nm,phone:$('cl-phone').value.trim(),company:$('cl-co').value,clientType:$('cl-type').value,notaryOffice:$('cl-notary-office').value.trim(),notaryAddr:$('cl-notary-addr').value.trim(),notaryLicense:$('cl-notary-license').value.trim(),interest:$('cl-interest').value,leadStatus:$('cl-lead').value,source:$('cl-source').value,note:$('cl-note').value.trim()};if(eId){const i=S.clients.findIndex(c=>c.id===parseInt(eId));if(i!==-1){const old=S.clients[i].leadStatus;S.clients[i]=obj;if(old!==obj.leadStatus)S.crmHistory.unshift({id:Date.now(),clientId:obj.id,clientName:obj.name,from:old,to:obj.leadStatus,date:now()})}}else S.clients.unshift(obj);audit('Клиент',nm);autoSave();closeModals();R();toast('✅')}
+async function deleteCl(id){if(!await showConfirm('Клиентті өшіру керек пе?','Өшіру',true))return;pushUndo();S.clients=S.clients.filter(c=>c.id!==id);audit('Клиент өшірілді');autoSave();R();toast('🗑 Өшірілді')}
+// CRM
+function renderCRM(){const cs=$('crm-stats');if(cs){const t=S.clients.length;const w=S.clients.filter(c=>c.leadStatus==='won').length;const a=S.clients.filter(c=>!['won','lost'].includes(c.leadStatus||'new')).length;cs.innerHTML=`<div class="sc text-center"><div class="sl">Барлығы</div><div class="sv mono" style="color:var(--blue)">${t}</div></div><div class="sc text-center"><div class="sl">Белсенді</div><div class="sv mono" style="color:var(--amber)">${a}</div></div><div class="sc text-center"><div class="sl">Мәміле</div><div class="sv mono" style="color:var(--green)">${w}</div></div><div class="sc text-center"><div class="sl">Конв.</div><div class="sv mono" style="color:var(--purple)">${t?Math.round(w/t*100):0}%</div></div>`}const ff=$('crm-funnel');if(ff)ff.innerHTML=Object.entries(LEAD_STAGES).map(([k,v])=>{const c=S.clients.filter(x=>(x.leadStatus||'new')===k);return`<div style="background:var(--bg);border:1px solid var(--brd);border-radius:8px;padding:8px"><div style="font-size:10px;font-weight:700;color:${v.color};margin-bottom:4px">${v.label} (${c.length})</div>${c.length?c.map(x=>`<div style="background:var(--card);border:1px solid var(--brd);border-radius:5px;padding:3px 5px;font-size:9px;margin-bottom:2px"><div style="font-weight:600">${esc(x.name)}</div></div>`).join(''):'<div style="color:var(--t3);font-size:8px;text-align:center;padding:4px">—</div>'}</div>`}).join('');const h=$('crm-history');if(h){const hist=(S.crmHistory||[]).slice(0,12);if(!hist.length){h.innerHTML='<div style="color:var(--t3);font-size:10px;text-align:center;padding:6px">—</div>';return}h.innerHTML=hist.map(x=>{const to=LEAD_STAGES[x.to]||{label:x.to,color:'var(--t2)'};return`<div style="display:flex;align-items:center;gap:5px;padding:3px 0;border-bottom:1px solid var(--brd);font-size:10px"><span style="font-weight:600">${esc(x.clientName)}</span><span style="color:var(--t3)">→</span><span style="color:${to.color};font-weight:600">${to.label}</span><span style="font-size:8px;color:var(--t3);margin-left:auto">${esc(x.date)}</span></div>`}).join('')}}
+// ORDERS
+function renderOrders(){const os=$('ord-stats');if(os){const a=S.orders.length;const ac=S.orders.filter(o=>!['delivered','cancelled'].includes(o.status)).length;const dn=S.orders.filter(o=>o.status==='delivered').length;const rv=S.orders.reduce((s,o)=>s+(+o.price||0),0);os.innerHTML=`<div class="sc text-center"><div class="sl">Барлығы</div><div class="sv mono" style="color:var(--blue)">${a}</div></div><div class="sc text-center"><div class="sl">Белсенді</div><div class="sv mono" style="color:var(--amber)">${ac}</div></div><div class="sc text-center"><div class="sl">Тапсырылды</div><div class="sv mono" style="color:var(--green)">${dn}</div></div><div class="sc text-center"><div class="sl">Сома</div><div class="sv mono" style="color:var(--purple)">${fmt(rv)}</div></div>`}const s=($('ord-search')?.value||'').toLowerCase();const sf=$('ord-status-filter')?.value||'all';let f=[...S.orders].sort((a,b)=>b.id-a.id);if(s)f=f.filter(o=>{const cl=o.clientId?S.clients.find(c=>c.id===o.clientId):null;return(cl?.name||'').toLowerCase().includes(s)||(o.service||'').toLowerCase().includes(s)});if(sf!=='all')f=f.filter(o=>o.status===sf);const tb=$('ord-body');if(tb){if(!f.length){tb.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--t3);padding:16px">—</td></tr>';return}tb.innerHTML=f.map(o=>{const cl=o.clientId?S.clients.find(c=>c.id===o.clientId):null;const tr=o.translatorId?S.employees.find(e=>e.id===o.translatorId):null;const st=ORDER_ST[o.status]||ORDER_ST.new;const ov=o.deadline&&o.deadline<td()&&!['delivered','cancelled','done'].includes(o.status);return`<tr${ov?' style="background:rgba(239,68,68,.03)"':''}><td class="mono" style="font-size:10px">#${o.id%10000}</td><td style="font-weight:600">${cl?esc(cl.name):'—'}</td><td style="font-size:10px">${esc(o.langFrom)}→${esc(o.langTo)}</td><td class="mono">${o.pages}</td><td style="font-size:10px">${tr?esc(tr.name):'—'}</td><td style="font-size:10px${ov?';color:var(--red);font-weight:700':''}">${o.deadline||'—'}</td><td class="mono" style="color:var(--green)">${fmt(o.price||0)}</td><td><span class="b" style="background:${st.c}18;color:${st.c}">${st.l}</span></td><td><button onclick="editOrder(${o.id})" style="color:var(--amber);background:none;border:none;cursor:pointer;padding:2px"><i class="fas fa-pen"></i></button> <button onclick="deleteOrder(${o.id})" style="color:var(--red);background:none;border:none;cursor:pointer;padding:2px"><i class="fas fa-trash"></i></button></td></tr>`}).join('')}}
+function openOrderModal(){$('modal-order').classList.add('show');$('modal-order-title').textContent='Жаңа тапсырыс';$('ord-id').value='';$('ord-pages').value='1';$('ord-price').value='';$('ord-deadline').value='';$('ord-status').value='new';$('ord-notes').value='';const cs=$('ord-client');cs.innerHTML='<option value="">—</option>';S.clients.forEach(c=>{cs.innerHTML+=`<option value="${c.id}">${esc(c.name)}</option>`});const ts=$('ord-translator');ts.innerHTML='<option value="">— Таңдаңыз</option>';// Барлық қызметкерлер + лауазымы
+if(!S.employees.length){ts.innerHTML+='<option disabled style="color:var(--t3)">Қызметкерлер жоқ — алдымен қосыңыз</option>'}else{S.employees.forEach(e=>{ts.innerHTML+=`<option value="${e.id}">${esc(e.name)} (${esc(e.position||'—')})</option>`})}}
+function saveOrder(){const id=$('ord-id').value;pushUndo();const o={id:id?parseInt(id):Date.now(),clientId:$('ord-client').value?parseInt($('ord-client').value):null,translatorId:$('ord-translator').value?parseInt($('ord-translator').value):null,langFrom:$('ord-lang-from').value,langTo:$('ord-lang-to').value,pages:parseInt($('ord-pages').value)||1,price:parseFloat($('ord-price').value)||0,deadline:$('ord-deadline').value||null,service:$('ord-service').value,status:$('ord-status').value,notes:$('ord-notes').value.trim(),createdAt:now()};if(id){const i=S.orders.findIndex(x=>x.id===parseInt(id));if(i!==-1)S.orders[i]=o}else S.orders.unshift(o);audit('Тапсырыс',o.service);autoSave();closeModals();R();toast('✅')}
+function editOrder(id){const o=S.orders.find(x=>x.id===id);if(!o)return;openOrderModal();$('modal-order-title').textContent='Түзету';$('ord-id').value=o.id;$('ord-client').value=o.clientId||'';$('ord-translator').value=o.translatorId||'';$('ord-lang-from').value=o.langFrom;$('ord-lang-to').value=o.langTo;$('ord-pages').value=o.pages;$('ord-price').value=o.price;$('ord-deadline').value=o.deadline||'';$('ord-service').value=o.service;$('ord-status').value=o.status;$('ord-notes').value=o.notes||''}
+async function deleteOrder(id){if(!await showConfirm('Тапсырысты өшіру керек пе?','Өшіру',true))return;pushUndo();S.orders=S.orders.filter(x=>x.id!==id);audit('Тапсырыс өшірілді');autoSave();R();toast('🗑 Өшірілді')}
+// DEBTS
+function renderDebt(pt){const el=$('debt-list');if(!el)return;const debts=S.transactions.filter(t=>t.status==='unpaid');const recv=debts.filter(t=>t.type==='income').reduce((s,t)=>s+(+(t.amountKZT||t.amount)||0),0);const pay=debts.filter(t=>t.type==='expense').reduce((s,t)=>s+(+(t.amountKZT||t.amount)||0),0);setText('debt-recv',fmt(recv));setText('debt-pay',fmt(pay));if(!debts.length){el.innerHTML='<div style="text-align:center;color:var(--t3);padding:16px;font-size:10px">Қарыздар жоқ ✅</div>';return}el.innerHTML=debts.sort((a,b)=>new Date(a.dueDate||'9999')-new Date(b.dueDate||'9999')).map(t=>{const cl=t.clientId?S.clients.find(c=>c.id===t.clientId):null;const ov=t.dueDate&&t.dueDate<td();const c=t.type==='income'?'var(--red)':'var(--amber)';return`<div class="sc" style="padding:8px 10px;display:flex;justify-content:space-between;align-items:center;${ov?'border-left:3px solid var(--red)':''}"><div><div style="font-size:11px;font-weight:600">${esc(t.desc||t.category)}</div><div style="font-size:8.5px;color:var(--t3)">${cl?esc(cl.name)+'  •  ':''} ${esc(t.company)} ${t.dueDate?'  •  Мерзім: '+t.dueDate:''} ${ov?'<span style="color:var(--red);font-weight:700">⚠ КЕШІКТІРІЛГЕН</span>':''}</div></div><div class="flex items-center gap-2"><span class="mono font-bold" style="color:${c}">${fmt(t.amountKZT||t.amount)}</span><button onclick="markPaid(${t.id})" class="btn btn-s" style="font-size:9px;padding:3px 8px"><i class="fas fa-check mr-1"></i>Төленді</button></div></div>`}).join('')}
+function markPaid(id){pushUndo();const t=S.transactions.find(x=>x.id===id);if(t){t.status='paid';audit('Қарыз төленді',t.desc||t.category);autoSave();R();toast('✅ Төленді')}}
+// TAX
+function renderTax(pt,income,expense,net,tax){setText('tax-inc',fmt(income));setText('tax-exp',fmt(expense));setText('tax-net',fmt(net));setText('tax-ipn',fmt(tax));const sq=pt.filter(t=>t.company==='SQUARE SERVICE'&&!t.isTransit);const kh=pt.filter(t=>t.company==='KHAIYR TRAVEL'&&!t.isTransit);function comp(txs,el){const i=txs.filter(t=>t.type==='income').reduce((s,t)=>s+(+(t.amountKZT||t.amount)||0),0);const e=txs.filter(t=>t.type==='expense').reduce((s,t)=>s+(+(t.amountKZT||t.amount)||0),0);const n=i-e;const p=Math.max(0,Math.round(n*(TAX.ipnPct/100)));const eel=$(el);if(eel)eel.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:10px"><div style="color:var(--t3)">Кіріс</div><div class="mono font-bold" style="color:var(--green)">${fmt(i)}</div><div style="color:var(--t3)">Шығыс</div><div class="mono font-bold" style="color:var(--red)">${fmt(e)}</div><div style="color:var(--t3)">Пайда</div><div class="mono font-bold" style="color:var(--blue)">${fmt(n)}</div><div style="color:var(--t3)">ИПН</div><div class="mono font-bold" style="color:var(--purple)">${fmt(p)}</div></div>`}comp(sq,'tax-sq');comp(kh,'tax-kh');setText('tax-d-ipn',fmt(tax));const mp=$('tax-monthly-payments');if(mp){const mzp=TAX.mzp,mrp=TAX.mrp;const opv=Math.round(mzp*TAX.opvPct/100);const so=Math.round(mzp*TAX.soPct/100);const st=Math.round(mrp*TAX.socTaxMrp);const opvr=Math.round(mzp*TAX.opvrPct/100);mp.innerHTML=`<div class="sc" style="padding:6px 8px;display:flex;justify-content:space-between"><span>ОПВ (${TAX.opvPct}%)</span><span class="mono font-bold">${fmt(opv)}</span></div><div class="sc" style="padding:6px 8px;display:flex;justify-content:space-between"><span>СО (${TAX.soPct}%)</span><span class="mono font-bold">${fmt(so)}</span></div><div class="sc" style="padding:6px 8px;display:flex;justify-content:space-between"><span>Соц.салық (${TAX.socTaxMrp} МРП)</span><span class="mono font-bold">${fmt(st)}</span></div><div class="sc" style="padding:6px 8px;display:flex;justify-content:space-between"><span>ОПВР (${TAX.opvrPct}%)</span><span class="mono font-bold">${fmt(opvr)}</span></div>${TAX.vosmsFree?'<div style="font-size:9px;color:var(--t3);padding:4px">ВОСМС — босатылған</div>':''}<div class="sc" style="padding:6px 8px;display:flex;justify-content:space-between;border-top:2px solid var(--brd);margin-top:4px"><span style="font-weight:700">Барлығы</span><span class="mono font-bold" style="color:var(--amber)">${fmt(opv+so+st+opvr)}</span></div>`}}
+// BLANKS
+function renderBlanks(){const bs=$('blank-stats');if(bs){const t=S.blanks.length;const ac=S.blanks.filter(b=>b.status==='active').length;const us=S.blanks.filter(b=>b.status==='used').length;const ex=S.blanks.filter(b=>b.status==='expired').length;bs.innerHTML=`<div class="sc text-center"><div class="sl">Барлығы</div><div class="sv mono" style="color:var(--blue)">${t}</div></div><div class="sc text-center"><div class="sl">Белсенді</div><div class="sv mono" style="color:var(--green)">${ac}</div></div><div class="sc text-center"><div class="sl">Қолданылған</div><div class="sv mono" style="color:var(--amber)">${us}</div></div><div class="sc text-center"><div class="sl">Өткен</div><div class="sv mono" style="color:var(--red)">${ex}</div></div>`}const s=($('blank-search')?.value||'').toLowerCase();let f=[...S.blanks].sort((a,b)=>b.id-a.id);if(s)f=f.filter(b=>(b.regNum||'').toLowerCase().includes(s)||(b.notaryName||'').toLowerCase().includes(s)||(b.city||'').toLowerCase().includes(s)||(b.signer||'').toLowerCase().includes(s));const tb=$('blank-body');if(tb){if(!f.length){tb.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--t3);padding:16px">—</td></tr>';return}tb.innerHTML=f.map(b=>{const sc={active:{l:'🟢',c:'b-paid'},used:{l:'🟡',c:'b-transit'},expired:{l:'🔴',c:'b-unpaid'}};const st=sc[b.status]||sc.active;return`<tr><td class="mono font-bold">${esc(b.regNum||'—')}</td><td style="font-size:10px">${esc(b.date)}</td><td style="font-weight:600">${esc(b.notaryName||'—')}</td><td style="font-size:10px">${esc(b.city||'')}</td><td class="mono" style="font-size:10px">${esc(b.license||'')}</td><td style="font-size:10px">${esc(b.signer||'')}</td><td class="mono" style="font-size:8.5px;max-width:80px;overflow:hidden;text-overflow:ellipsis" title="${esc(b.code||'')}">${esc((b.code||'').slice(0,12))}${(b.code||'').length>12?'…':''}</td><td><span class="b ${st.c}">${st.l}</span></td><td style="white-space:nowrap"><button onclick="editBlank(${b.id})" style="color:var(--amber);background:none;border:none;cursor:pointer;padding:2px"><i class="fas fa-pen"></i></button> <button onclick="deleteBlank(${b.id})" style="color:var(--red);background:none;border:none;cursor:pointer;padding:2px"><i class="fas fa-trash"></i></button></td></tr>`}).join('')}}
+function resetBlkAI(){$('blk-ai-idle').style.display='block';$('blk-ai-loading').style.display='none';$('blk-ai-done').style.display='none'}
+function openBlankModal(){$('modal-blank').classList.add('show');$('modal-blank-title').textContent='Жаңа бланк';$('blk-id').value='';$('blk-notary-name').value='';$('blk-city').value='';$('blk-date').valueAsDate=new Date();$('blk-license').value='';$('blk-license-date').value='';$('blk-license-org').value='';$('blk-reg').value='';$('blk-code').value='';$('blk-signer').value='';$('blk-signer-iin').value='';$('blk-purpose').value='Аударма куәландыру';$('blk-note').value='';$('blk-status').value='active';resetBlkAI()}
+function saveBlank(){const id=$('blk-id').value;pushUndo();const b={id:id?parseInt(id):Date.now(),notaryName:$('blk-notary-name').value.trim(),city:$('blk-city').value.trim(),date:$('blk-date').value,license:$('blk-license').value.trim(),licenseDate:$('blk-license-date')?.value||'',licenseOrg:$('blk-license-org').value.trim(),regNum:$('blk-reg').value.trim(),code:$('blk-code').value.trim(),signer:$('blk-signer').value.trim(),signerIIN:$('blk-signer-iin').value.trim(),purpose:$('blk-purpose').value.trim(),note:$('blk-note').value.trim(),status:$('blk-status').value};if(id){const i=S.blanks.findIndex(x=>x.id===parseInt(id));if(i!==-1)S.blanks[i]=b}else S.blanks.unshift(b);audit('Бланк',b.regNum+' / '+b.notaryName);autoSave();closeModals();R();toast('✅ Бланк сақталды')}
+function editBlank(id){const b=S.blanks.find(x=>x.id===id);if(!b)return;openBlankModal();$('modal-blank-title').textContent='Түзету';$('blk-id').value=b.id;$('blk-notary-name').value=b.notaryName||'';$('blk-city').value=b.city||'';$('blk-date').value=b.date;$('blk-license').value=b.license||'';$('blk-license-date').value=b.licenseDate||'';$('blk-license-org').value=b.licenseOrg||'';$('blk-reg').value=b.regNum||'';$('blk-code').value=b.code||'';$('blk-signer').value=b.signer||'';$('blk-signer-iin').value=b.signerIIN||'';$('blk-purpose').value=b.purpose||'';$('blk-note').value=b.note||'';$('blk-status').value=b.status;resetBlkAI()}
+async function deleteBlank(id){if(!await showConfirm('Бланкті өшіру керек пе?','Өшіру',true))return;pushUndo();S.blanks=S.blanks.filter(x=>x.id!==id);audit('Бланк өшірілді');autoSave();R();toast('🗑 Өшірілді')}
+// EMPLOYEES
+function renderEmp(){const g=$('emp-grid');if(!g)return;if(!S.employees.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--t3);padding:16px">—</div>';return}g.innerHTML=S.employees.map(e=>{const oc=S.orders.filter(o=>o.translatorId===e.id).length;const dc=S.orders.filter(o=>o.translatorId===e.id&&o.status==='delivered').length;return`<div class="sc"><div class="flex items-center gap-3 mb-2"><div style="width:32px;height:32px;border-radius:8px;background:rgba(6,182,212,.1);display:flex;align-items:center;justify-content:center;color:var(--cyan);font-weight:700;font-size:13px">${esc(e.name.charAt(0))}</div><div style="flex:1"><div style="font-size:11px;font-weight:700">${esc(e.name)}</div><div style="font-size:9px;color:var(--t3)">${esc(e.position)} ${e.phone?' • '+esc(e.phone):''}</div></div></div><div style="font-size:9px;color:var(--t2);margin-bottom:4px">${e.langs?'🌐 '+esc(e.langs):''}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:9px"><div style="color:var(--t3)">Жалақы:</div><div class="mono font-bold" style="color:var(--green)">${fmt(e.salary||0)}</div><div style="color:var(--t3)">Тариф:</div><div class="mono">${fmt(e.rate||0)}/бет</div><div style="color:var(--t3)">Тапсырыс:</div><div class="mono">${oc} (${dc} ✅)</div></div><div class="flex gap-2 mt-2"><button onclick="editEmployee(${e.id})" style="color:var(--amber);background:none;border:none;cursor:pointer;font-size:9px"><i class="fas fa-pen"></i></button><button onclick="deleteEmployee(${e.id})" style="color:var(--red);background:none;border:none;cursor:pointer;font-size:9px"><i class="fas fa-trash"></i></button></div></div>`}).join('')}
+function openEmployeeModal(resetDate=true){$('modal-employee').classList.add('show');$('modal-emp-title').textContent='Жаңа қызметкер';['emp-id','emp-name','emp-phone','emp-langs'].forEach(id=>$(id).value='');$('emp-position').value='Аудармашы';$('emp-salary').value='0';$('emp-rate').value='0';if(resetDate)$('emp-hire').valueAsDate=new Date()}
+function saveEmployee(){const id=$('emp-id').value;const nm=$('emp-name').value.trim();if(!nm){toast('Атын жазыңыз','error');return}pushUndo();const e={id:id?parseInt(id):Date.now(),name:nm,position:$('emp-position').value,phone:$('emp-phone').value.trim(),langs:$('emp-langs').value.trim(),salary:parseFloat($('emp-salary').value)||0,rate:parseFloat($('emp-rate').value)||0,hireDate:$('emp-hire').value||''};if(id){const i=S.employees.findIndex(x=>x.id===parseInt(id));if(i!==-1)S.employees[i]=e}else S.employees.unshift(e);audit('Қызметкер',nm);autoSave();closeModals();R();toast('✅')}
+function editEmployee(id){const e=S.employees.find(x=>x.id===id);if(!e)return;openEmployeeModal(false);$('modal-emp-title').textContent='Түзету';$('emp-id').value=e.id;$('emp-name').value=e.name;$('emp-position').value=e.position||'Аудармашы';$('emp-phone').value=e.phone||'';$('emp-langs').value=e.langs||'';$('emp-salary').value=e.salary||0;$('emp-rate').value=e.rate||0;$('emp-hire').value=e.hireDate||''}
+async function deleteEmployee(id){if(!await showConfirm('Қызметкерді өшіру керек пе?','Өшіру',true))return;pushUndo();S.employees=S.employees.filter(x=>x.id!==id);audit('Қызметкер өшірілді');autoSave();R();toast('🗑 Өшірілді')}
+// SALARY
+function renderSalary(){const tb=$('salary-body');if(!tb)return;if(!S.employees.length){tb.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--t3);padding:16px">Қызметкерлер жоқ</td></tr>';return}tb.innerHTML=S.employees.map(e=>{const orders=S.orders.filter(o=>o.translatorId===e.id&&o.status==='delivered');const pagesTotal=orders.reduce((s,o)=>s+(o.pages||0),0);const orderPay=pagesTotal*(e.rate||0);const total=(e.salary||0)+orderPay;return`<tr><td style="font-weight:600">${esc(e.name)}</td><td style="font-size:10px">${esc(e.position)}</td><td class="mono">${fmt(e.salary||0)}</td><td class="mono" style="color:var(--teal)">${fmt(orderPay)} <span style="font-size:8px;color:var(--t3)">(${pagesTotal}бет)</span></td><td class="mono font-bold" style="color:var(--green)">${fmt(total)}</td></tr>`}).join('')+`<tr style="border-top:2px solid var(--brd)"><td colspan="4" style="font-weight:700;text-align:right">Барлығы:</td><td class="mono font-bold" style="color:var(--amber)">${fmt(S.employees.reduce((s,e)=>{const op=S.orders.filter(o=>o.translatorId===e.id&&o.status==='delivered').reduce((ss,o)=>ss+(o.pages||0),0)*(e.rate||0);return s+(e.salary||0)+op},0))}</td></tr>`}
+// UMRAH
+function initUmrahRows(){const el=$('umrah-rows');if(!el)return;el.innerHTML='';addUmrahRow()}
+function addUmrahRow(){const el=$('umrah-rows');if(!el)return;const d=document.createElement('div');d.className='ur';d.innerHTML=`<input type="text" class="fi ur-name" placeholder="Шығын атауы"><div class="flex gap-1"><input type="number" class="fi mono ur-amt" step="any" oninput="calcUmrah()"><select class="fsel ur-cur" onchange="calcUmrah()" style="width:70px"><option>KZT</option><option>USD</option><option>EUR</option><option>SAR</option><option>TRY</option></select></div><div class="mono" style="font-size:10px;color:var(--green);text-align:right" data-kzt>0 ₸</div><button onclick="this.parentElement.remove();calcUmrah()" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:10px"><i class="fas fa-times"></i></button>`;el.appendChild(d)}
+function calcUmrah(){const rows=document.querySelectorAll('.ur');let total=0;rows.forEach(r=>{const a=parseFloat(r.querySelector('.ur-amt')?.value)||0;const c=r.querySelector('.ur-cur')?.value||'KZT';const k=toKZT(a,c);r.querySelector('[data-kzt]').textContent=fmt(k);total+=k});const sell=parseFloat($('umrah-sell')?.value)||0;const ppl=parseInt($('umrah-ppl')?.value)||1;const p1=sell-total;const pt=p1*ppl;setText('umrah-cost',fmt(total));setText('umrah-p1',fmt(p1));setText('umrah-pt',fmt(pt))}
+function saveUmrahPkg(){const rows=[];document.querySelectorAll('.ur').forEach(r=>{const n=r.querySelector('.ur-name')?.value;const a=parseFloat(r.querySelector('.ur-amt')?.value)||0;const c=r.querySelector('.ur-cur')?.value||'KZT';if(n&&a>0)rows.push({name:n,amount:a,currency:c})});if(!rows.length){toast('Жолдарды толтырыңыз','error');return}pushUndo();S.umrahPackages.unshift({id:Date.now(),date:td(),rows,sell:parseFloat($('umrah-sell')?.value)||0,ppl:parseInt($('umrah-ppl')?.value)||1});audit('Умра пакет сақталды');autoSave();R();toast('✅ Сақталды')}
+function renderUS(){const el=$('umrah-saved');if(!el)return;if(!S.umrahPackages?.length){el.innerHTML='<div style="color:var(--t3);font-size:10px;text-align:center;padding:6px">—</div>';return}el.innerHTML=S.umrahPackages.map(p=>{const cost=p.rows.reduce((s,r)=>s+toKZT(r.amount,r.currency),0);const profit=(p.sell-cost)*p.ppl;return`<div class="sc" style="padding:8px 10px"><div class="flex justify-between items-center"><div><div style="font-size:10px;font-weight:600">${p.date} • ${p.ppl} адам</div><div style="font-size:8.5px;color:var(--t3)">${p.rows.map(r=>r.name).join(', ')}</div></div><div style="text-align:right"><div class="mono" style="font-size:10px;color:var(--amber)">Құн: ${fmt(cost)}</div><div class="mono font-bold" style="color:var(--green)">Пайда: ${fmt(profit)}</div></div></div><button onclick="deleteUmrah(${p.id})" style="color:var(--red);background:none;border:none;cursor:pointer;font-size:9px;margin-top:2px"><i class="fas fa-trash"></i> Өшіру</button></div>`}).join('')}
+async function deleteUmrah(id){if(!await showConfirm('Умра пакетті өшіру керек пе?','Өшіру',true))return;pushUndo();S.umrahPackages=S.umrahPackages.filter(x=>x.id!==id);autoSave();R();toast('🗑 Өшірілді')}
+// CURRENCY
+function convertCur(){const a=parseFloat($('conv-amt')?.value)||0;const f=$('conv-from')?.value||'USD';const t=$('conv-to')?.value||'KZT';const fR=RATES[f]||1;const tR=RATES[t]||1;const r=a*fR/tR;const re=$('conv-result');if(re)re.textContent=`${r.toLocaleString('ru-RU',{maximumFractionDigits:2})} ${t}`;const ri=$('conv-rate-info');if(ri)ri.textContent=`1 ${f} = ${(fR/tR).toFixed(4)} ${t}`}
+function renderRG(){const el=$('rates-grid');if(!el)return;el.innerHTML=Object.entries(RATES).filter(([k])=>k!=='KZT').map(([c,r])=>`<div class="sc text-center" style="padding:8px"><div style="font-size:12px;font-weight:800">${c}</div><div class="mono" style="font-size:11px;color:var(--green);margin-top:2px">${r.toLocaleString('ru-RU')} ₸</div></div>`).join('')}
+// FIXED
+function renderFixed(){const el=$('fixed-list');if(!el)return;if(!S.fixedExpenses?.length){el.innerHTML='<div style="text-align:center;color:var(--t3);padding:16px;font-size:10px">—</div>';return}const total=S.fixedExpenses.reduce((s,f)=>s+(+f.amount||0),0);el.innerHTML=S.fixedExpenses.map(f=>`<div class="sc" style="padding:8px 10px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:11px;font-weight:600">${esc(f.name)}</div><div style="font-size:8.5px;color:var(--t3)">${esc(f.company||'')} • ${esc(f.category||'')}</div></div><div class="flex items-center gap-2"><span class="mono font-bold" style="color:var(--red)">${fmt(f.amount)}</span><button onclick="editFixed(${f.id})" style="color:var(--amber);background:none;border:none;cursor:pointer"><i class="fas fa-pen"></i></button><button onclick="deleteFixed(${f.id})" style="color:var(--red);background:none;border:none;cursor:pointer"><i class="fas fa-trash"></i></button></div></div>`).join('')+`<div class="sc text-center" style="background:rgba(239,68,68,.05)"><div class="sl">Ай сайынғы барлығы</div><div class="sv mono" style="color:var(--red)">${fmt(total)}</div></div>`}
+function openFixedModal(){$('modal-fixed').classList.add('show');$('fix-id').value='';$('fix-name').value='';$('fix-amount').value='';$('fix-co').value='SQUARE SERVICE';$('fix-cat').value='Офис жалдау'}
+function saveFixed(){const id=$('fix-id').value;const nm=$('fix-name').value.trim();const amt=parseFloat($('fix-amount').value);if(!nm||!amt){toast('Толтырыңыз','error');return}pushUndo();const f={id:id?parseInt(id):Date.now(),name:nm,amount:amt,company:$('fix-co').value,category:$('fix-cat').value};if(id){const i=S.fixedExpenses.findIndex(x=>x.id===parseInt(id));if(i!==-1)S.fixedExpenses[i]=f}else S.fixedExpenses.unshift(f);audit('Тіркелген шығын',nm);autoSave();closeModals();R();toast('✅')}
+function editFixed(id){const f=S.fixedExpenses.find(x=>x.id===id);if(!f)return;openFixedModal();$('fix-id').value=f.id;$('fix-name').value=f.name;$('fix-amount').value=f.amount;$('fix-co').value=f.company||'SQUARE SERVICE';$('fix-cat').value=f.category||'Офис жалдау'}
+async function deleteFixed(id){if(!await showConfirm('Тіркелген шығынды өшіру керек пе?','Өшіру',true))return;pushUndo();S.fixedExpenses=S.fixedExpenses.filter(x=>x.id!==id);autoSave();R();toast('🗑 Өшірілді')}
+// ASSETS
+function renderAssets(){const el=$('assets-list');if(!el)return;if(!S.assets?.length){el.innerHTML='<div style="text-align:center;color:var(--t3);padding:16px;font-size:10px">—</div>';return}const total=S.assets.reduce((s,a)=>s+(+a.cost||0),0);el.innerHTML=S.assets.map(a=>{const yrs=+a.lifeYears||3;const dep=Math.round((+a.cost||0)/yrs);const age=a.date?((Date.now()-new Date(a.date).getTime())/31536000000).toFixed(1):0;return`<div class="sc" style="padding:8px 10px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:11px;font-weight:600">${esc(a.name)}</div><div style="font-size:8.5px;color:var(--t3)">${esc(a.company||'')} • ${a.date||''} • Амортизация: ${yrs}ж (${age}ж.)</div></div><div style="text-align:right"><div class="mono font-bold" style="color:var(--blue)">${fmt(a.cost)}</div><div style="font-size:8px;color:var(--t3)">-${fmt(dep)}/жыл</div></div><div class="flex gap-1"><button onclick="editAsset(${a.id})" style="color:var(--amber);background:none;border:none;cursor:pointer"><i class="fas fa-pen"></i></button><button onclick="deleteAsset(${a.id})" style="color:var(--red);background:none;border:none;cursor:pointer"><i class="fas fa-trash"></i></button></div></div>`}).join('')+`<div class="sc text-center"><div class="sl">Барлық активтер</div><div class="sv mono" style="color:var(--blue)">${fmt(total)}</div></div>`}
+function openAssetModal(){$('modal-asset').classList.add('show');$('ast-id').value='';$('ast-name').value='';$('ast-cost').value='';$('ast-date').valueAsDate=new Date();$('ast-life').value='3';$('ast-co').value='SQUARE SERVICE'}
+function saveAsset(){const id=$('ast-id').value;const nm=$('ast-name').value.trim();const cost=parseFloat($('ast-cost').value);if(!nm||!cost){toast('Толтырыңыз','error');return}pushUndo();const a={id:id?parseInt(id):Date.now(),name:nm,cost,date:$('ast-date').value,lifeYears:parseInt($('ast-life').value)||3,company:$('ast-co').value};if(id){const i=S.assets.findIndex(x=>x.id===parseInt(id));if(i!==-1)S.assets[i]=a}else S.assets.unshift(a);audit('Актив',nm);autoSave();closeModals();R();toast('✅')}
+function editAsset(id){const a=S.assets.find(x=>x.id===id);if(!a)return;openAssetModal();$('ast-id').value=a.id;$('ast-name').value=a.name;$('ast-cost').value=a.cost;$('ast-date').value=a.date||'';$('ast-life').value=a.lifeYears||3;$('ast-co').value=a.company||'SQUARE SERVICE'}
+async function deleteAsset(id){if(!await showConfirm('Активті өшіру керек пе?','Өшіру',true))return;pushUndo();S.assets=S.assets.filter(x=>x.id!==id);autoSave();R();toast('🗑 Өшірілді')}
+// NOTES
+function renderNotes(){const g=$('notes-grid');if(!g)return;const sorted=[...S.notes].sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||b.id-a.id);if(!sorted.length){g.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--t3);padding:16px">—</div>';return}const colorMap={blue:'var(--blue)',green:'var(--green)',amber:'var(--amber)',red:'var(--red)',purple:'var(--purple)'};g.innerHTML=sorted.map(n=>{const c=colorMap[n.color]||colorMap.blue;return`<div class="sc" style="border-top:3px solid ${c}"><div class="flex justify-between items-center mb-1"><div style="font-size:11px;font-weight:700">${n.pinned?'📌 ':''}${esc(n.title)}</div><div class="flex gap-1"><button onclick="editNote(${n.id})" style="color:var(--amber);background:none;border:none;cursor:pointer;font-size:9px"><i class="fas fa-pen"></i></button><button onclick="deleteNote(${n.id})" style="color:var(--red);background:none;border:none;cursor:pointer;font-size:9px"><i class="fas fa-trash"></i></button></div></div><div style="font-size:10px;color:var(--t2);white-space:pre-wrap;max-height:100px;overflow-y:auto">${esc(n.body||'')}</div></div>`}).join('')}
+function openNoteModal(){$('modal-note').classList.add('show');$('note-id').value='';$('note-title').value='';$('note-body').value='';$('note-color').value='blue';$('note-pin').value='0'}
+function saveNote(){const id=$('note-id').value;const t=$('note-title').value.trim();if(!t){toast('Тақырып жазыңыз','error');return}pushUndo();const n={id:id?parseInt(id):Date.now(),title:t,body:$('note-body').value,color:$('note-color').value,pinned:$('note-pin').value==='1'};if(id){const i=S.notes.findIndex(x=>x.id===parseInt(id));if(i!==-1)S.notes[i]=n}else S.notes.unshift(n);audit('Жазба',t);autoSave();closeModals();R();toast('✅')}
+function editNote(id){const n=S.notes.find(x=>x.id===id);if(!n)return;openNoteModal();$('note-id').value=n.id;$('note-title').value=n.title;$('note-body').value=n.body||'';$('note-color').value=n.color||'blue';$('note-pin').value=n.pinned?'1':'0'}
+async function deleteNote(id){if(!await showConfirm('Жазбаны өшіру керек пе?','Өшіру',true))return;pushUndo();S.notes=S.notes.filter(x=>x.id!==id);autoSave();R();toast('🗑 Өшірілді')}
+// INVOICE
+function initInvRows(){const el=$('inv-rows');if(!el)return;el.innerHTML='';addInvRow()}
+function addInvRow(){const el=$('inv-rows');if(!el)return;const d=document.createElement('div');d.style.cssText='display:grid;grid-template-columns:1fr 60px 80px 24px;gap:4px;align-items:center;margin-bottom:4px';d.innerHTML=`<input type="text" class="fi inv-svc" placeholder="Қызмет"><input type="number" class="fi mono inv-qty" value="1" min="1" oninput="calcInv()"><input type="number" class="fi mono inv-price" placeholder="Баға" oninput="calcInv()"><button onclick="this.parentElement.remove();calcInv()" style="background:none;border:none;color:var(--red);cursor:pointer"><i class="fas fa-times"></i></button>`;el.appendChild(d)}
+function calcInv(){let total=0;document.querySelectorAll('#inv-rows > div').forEach(r=>{const q=parseInt(r.querySelector('.inv-qty')?.value)||0;const p=parseFloat(r.querySelector('.inv-price')?.value)||0;total+=q*p});setText('inv-total',fmt(total));setText('inv-words',numToWords(total)+' теңге')}
+function numToWords(n){n=Math.round(n);if(n===0)return'нөл';const u=['','бір','екі','үш','төрт','бес','алты','жеті','сегіз','тоғыз'];const t=['','он','жиырма','отыз','қырық','елу','алпыс','жетпіс','сексен','тоқсан'];const r=[];if(n>=1000000){const m=Math.floor(n/1000000);r.push((m>1?u[m]+' ':'')+'миллион');n%=1000000}if(n>=1000){const k=Math.floor(n/1000);if(k>=100){r.push(u[Math.floor(k/100)]+' жүз');const rem=k%100;if(rem>=10)r.push(t[Math.floor(rem/10)]);if(rem%10)r.push(u[rem%10])}else{if(k>=10)r.push(t[Math.floor(k/10)]);if(k%10>1)r.push(u[k%10]);else if(k===1)r.push('бір')}r.push('мың');n%=1000}if(n>=100){r.push(u[Math.floor(n/100)]+' жүз');n%=100}if(n>=10){r.push(t[Math.floor(n/10)]);n%=10}if(n>0)r.push(u[n]);return r.join(' ')}
+function printInv(){const co=$('inv-co').value;const coName=co==='sq'?'ЖК «SQUARE SERVICE»':'ЖК «KHAIYR TRAVEL»';const coInfo=co==='sq'?'ИИН: 010912501234 / БИН: 250140000123':'ИИН: 020415503456';const num=$('inv-num').value;const dt=$('inv-date').value;const bn=$('inv-buyer-name').value;const bb=$('inv-buyer-bin').value;const ba=$('inv-buyer-addr').value;const ct=$('inv-contract').value;let rows='';let total=0;document.querySelectorAll('#inv-rows > div').forEach((r,i)=>{const s=r.querySelector('.inv-svc')?.value||'';const q=parseInt(r.querySelector('.inv-qty')?.value)||0;const p=parseFloat(r.querySelector('.inv-price')?.value)||0;const sum=q*p;total+=sum;rows+=`<tr><td style="border:1px solid #999;padding:4px;text-align:center">${i+1}</td><td style="border:1px solid #999;padding:4px">${esc(s)}</td><td style="border:1px solid #999;padding:4px;text-align:center">${q}</td><td style="border:1px solid #999;padding:4px;text-align:right">${sum.toLocaleString('ru-RU')} ₸</td></tr>`});const html=`<div style="font-family:Arial;max-width:700px;margin:auto;padding:20px;color:#000"><h2 style="text-align:center;margin-bottom:4px">СЧЁТ НА ОПЛАТУ № ${esc(num)}</h2><p style="text-align:center;color:#666;font-size:12px">от ${esc(dt)}</p><table style="width:100%;margin:14px 0;font-size:12px"><tr><td style="padding:6px;background:#f5f5f5"><b>Поставщик:</b><br>${esc(coName)}<br>${esc(coInfo)}</td></tr><tr><td style="padding:6px"><b>Покупатель:</b><br>${esc(bn)}${bb?' / БИН: '+esc(bb):''}${ba?'<br>'+esc(ba):''}</td></tr></table>${ct?`<p style="font-size:11px">Договор: ${esc(ct)}</p>`:''}<table style="width:100%;border-collapse:collapse;font-size:12px;margin:10px 0"><thead><tr style="background:#e8e8e8"><th style="border:1px solid #999;padding:4px">№</th><th style="border:1px solid #999;padding:4px">Наименование</th><th style="border:1px solid #999;padding:4px">Кол-во</th><th style="border:1px solid #999;padding:4px">Сумма</th></tr></thead><tbody>${rows}</tbody><tfoot><tr style="font-weight:bold"><td colspan="3" style="border:1px solid #999;padding:4px;text-align:right">ИТОГО:</td><td style="border:1px solid #999;padding:4px;text-align:right">${total.toLocaleString('ru-RU')} ₸</td></tr></tfoot></table><p style="font-size:11px"><b>Сумма прописью:</b> ${numToWords(total)} теңге 00 тиын</p><p style="font-size:10px;color:#999;margin-top:20px;text-align:center">Документ сформирован в системе SQUARE SERVICE v9</p></div>`;$('print-area').innerHTML=html;$('print-area').style.display='block';setTimeout(()=>{window.print();$('print-area').style.display='none';$('print-area').innerHTML=''},500)}
+function saveInvDraft(){const rows=[];document.querySelectorAll('#inv-rows > div').forEach(r=>{const s=r.querySelector('.inv-svc')?.value||'';const q=parseInt(r.querySelector('.inv-qty')?.value)||0;const p=parseFloat(r.querySelector('.inv-price')?.value)||0;if(s)rows.push({service:s,qty:q,price:p})});pushUndo();const inv={id:Date.now(),num:$('inv-num').value,date:$('inv-date').value,company:$('inv-co').value,buyerName:$('inv-buyer-name').value,buyerBin:$('inv-buyer-bin').value,buyerAddr:$('inv-buyer-addr').value,contract:$('inv-contract').value,rows,total:rows.reduce((s,r)=>s+r.qty*r.price,0)};S.invoices.unshift(inv);audit('Инвойс',inv.num);autoSave();R();toast('✅ Сақталды')}
+function renderIS(){const el=$('inv-saved-list');if(!el)return;if(!S.invoices?.length){el.innerHTML='<div style="color:var(--t3);font-size:10px;text-align:center;padding:6px">—</div>';return}el.innerHTML=S.invoices.map(inv=>`<div class="sc" style="padding:8px 10px;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:11px;font-weight:600">Счёт №${esc(inv.num)}</div><div style="font-size:8.5px;color:var(--t3)">${inv.date} • ${esc(inv.buyerName||'—')}</div></div><div class="flex items-center gap-2"><span class="mono font-bold" style="color:var(--green)">${fmt(inv.total)}</span><button onclick="deleteInv(${inv.id})" style="color:var(--red);background:none;border:none;cursor:pointer"><i class="fas fa-trash"></i></button></div></div>`).join('')}
+async function deleteInv(id){if(!await showConfirm('Счетті өшіру керек пе?','Өшіру',true))return;pushUndo();S.invoices=S.invoices.filter(x=>x.id!==id);autoSave();R();toast('🗑 Өшірілді')}
+// AUDIT
+function renderAudit(){const tb=$('audit-body');if(!tb)return;const logs=(S.auditLog||[]).slice(0,100);if(!logs.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--t3);padding:16px">—</td></tr>';return}tb.innerHTML=logs.map(l=>`<tr><td style="font-size:10px;white-space:nowrap">${esc(l.date)}</td><td style="font-size:10px">${esc(l.user)}</td><td style="font-weight:600;font-size:10px">${esc(l.action)}</td><td style="font-size:9px;color:var(--t3)">${esc(l.details||'')}</td></tr>`).join('')}
+// SETTINGS
+function loadSettingsUI(){$('set-mzp').value=TAX.mzp;$('set-mrp').value=TAX.mrp;$('set-opv').value=TAX.opvPct;$('set-so').value=TAX.soPct;$('set-soctax-mrp').value=TAX.socTaxMrp;$('set-opvr').value=TAX.opvrPct;$('set-ipn').value=TAX.ipnPct;$('set-vosms-free').checked=TAX.vosmsFree;if($('set-api-key'))$('set-api-key').value=AI_KEY||'';const si=$('storage-info');if(si){const ls=JSON.stringify(S).length;si.textContent=`Жергілікті сақтау: ~${(ls/1024).toFixed(1)} КБ • Транзакция: ${S.transactions.length} • Клиент: ${S.clients.length} • Тапсырыс: ${S.orders.length} • Бланк: ${S.blanks.length}`}}
+function saveSettings(){TAX.mzp=parseInt($('set-mzp').value)||85000;TAX.mrp=parseInt($('set-mrp').value)||3932;TAX.opvPct=parseFloat($('set-opv').value)||10;TAX.soPct=parseFloat($('set-so').value)||3.5;TAX.socTaxMrp=parseInt($('set-soctax-mrp').value)||1;TAX.opvrPct=parseFloat($('set-opvr').value)||1.5;TAX.ipnPct=parseFloat($('set-ipn').value)||10;TAX.vosmsFree=$('set-vosms-free').checked;localStorage.setItem('SQ_TaxCfg',JSON.stringify(TAX));toast('✅ Параметрлер сақталды');R()}
+function resetSettings(){TAX={...DEFAULT_TAX};saveSettings()}
+async function clearAllData(){if(!await showConfirm('⚠ БАРЛЫҚ ЖЕРГІЛІКТІ ДЕРЕКТЕР ӨШІРІЛЕДІ! (Бұлттағы деректер сақталады)','Өшіру',true))return;if(!await showConfirm('Сіз шынымен сенімдісіз бе? Бұл әрекетті қайтара алмайсыз.','Иә, өшіру',true))return;S=JSON.parse(JSON.stringify(DS));savLocal();toast('Жергілікті деректер өшірілді','error');setTimeout(()=>location.reload(),1000)}
+// EXPORT/IMPORT
+function xport(){const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`SQUARE_backup_${td()}.json`;a.click();URL.revokeObjectURL(url);toast('JSON жүктелді')}
+function imp(input){const f=input.files[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{try{const d=JSON.parse(reader.result);if(!d.transactions&&!d.clients){toast('Қате формат','error');return}pushUndo();Object.keys(DS).forEach(k=>{if(d[k])S[k]=d[k]});autoSave();R();toast('Импорт сәтті!')}catch(e){toast('JSON қате','error')}};reader.readAsText(f)}
+function exportExcel(){try{const wb=XLSX.utils.book_new();const txd=S.transactions.map(t=>({Күні:t.date,Компания:t.company,Түрі:t.type==='income'?'Кіріс':'Шығыс',Категория:t.category,Сипаттама:t.desc,Сома:t.amount,Валюта:t.currency,Сома_KZT:t.amountKZT||t.amount,Статус:t.status,Транзит:t.isTransit?'Иә':''}));const ws1=XLSX.utils.json_to_sheet(txd);XLSX.utils.book_append_sheet(wb,ws1,'Транзакциялар');const cld=S.clients.map(c=>({Аты:c.name,Телефон:c.phone,Компания:c.company,Түрі:c.clientType,Статус:c.leadStatus,Қызығушылық:c.interest}));const ws2=XLSX.utils.json_to_sheet(cld);XLSX.utils.book_append_sheet(wb,ws2,'Клиенттер');const ord=S.orders.map(o=>{const cl=o.clientId?S.clients.find(c=>c.id===o.clientId):null;return{Клиент:cl?.name||'',Тіл:o.langFrom+'→'+o.langTo,Бет:o.pages,Баға:o.price,Статус:o.status,Мерзім:o.deadline}});const ws3=XLSX.utils.json_to_sheet(ord);XLSX.utils.book_append_sheet(wb,ws3,'Тапсырыстар');XLSX.writeFile(wb,`SQUARE_${td()}.xlsx`);toast('Excel жүктелді')}catch(e){toast('Excel қате','error');console.error(e)}}
+// WHATSAPP
+function shareDailySummaryWA(){const pt=gfp();const{income,expense,net}=calcT(pt);const y=$('gy').value,m=$('gm').value;const t=`📊 *SQUARE SERVICE — Есеп*\n📅 ${y}${m!=='all'?' / '+MS[+m]:''}\n\n✅ Кіріс: ${fmt(income)}\n❌ Шығыс: ${fmt(expense)}\n💰 Пайда: ${fmt(net)}\n\n📋 Тапсырыс: ${S.orders.filter(o=>!['cancelled','delivered'].includes(o.status)).length} белсенді\n👥 Клиент: ${S.clients.length}`;window.open('https://wa.me/?text='+encodeURIComponent(t))}
+// KEYBOARD
+document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey){if(e.key==='z'){e.preventDefault();if(undoStack.length){redoStack.push(JSON.stringify(S));S=JSON.parse(undoStack.pop());autoSave();R();toast('↶ Кері')}}else if(e.key==='y'){e.preventDefault();if(redoStack.length){undoStack.push(JSON.stringify(S));S=JSON.parse(redoStack.pop());autoSave();R();toast('↷ Қайта')}}else if(e.key==='s'){e.preventDefault();sav()}else if(e.key==='k'){e.preventDefault();oTx()}else if(e.key==='n'){e.preventDefault();openOrderModal()}}if(e.key==='Escape')closeModals()});
+
+// ============================================================
+// SERVICE WORKER — толық офлайн жұмыс (PWA)
+// ============================================================
+// SW коды — file cache + network-first стратегиясы
+// Blob URL арқылы тіркейміз, бөлек файл қажет емес
+if('serviceWorker' in navigator){
+    const swCode=`
+const CACHE_NAME='sq-v10-cache-v1';
+const STATIC_ASSETS=[
+    'https://cdn.tailwindcss.com',
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css',
+    'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
+    'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+];
+self.addEventListener('install',e=>{
+    self.skipWaiting();
+    e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(STATIC_ASSETS).catch(()=>{})));
+});
+self.addEventListener('activate',e=>{
+    e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)))));
+    self.clients.claim();
+});
+self.addEventListener('fetch',e=>{
+    const url=e.request.url;
+    // Supabase API — әрқашан желі арқылы (кешке салмаймыз)
+    if(url.includes('supabase.co')||url.includes('anthropic.com')||url.includes('exchangerate-api.com')){
+        return; // браузердің әдеттегі өңдеуі
+    }
+    // Негізгі html — network first, сонан соң кеш
+    if(e.request.mode==='navigate'||e.request.destination==='document'){
+        e.respondWith(fetch(e.request).then(r=>{const cp=r.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,cp));return r}).catch(()=>caches.match(e.request).then(r=>r||caches.match('/'))));
+        return;
+    }
+    // CDN статикасы — cache first
+    e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(nr=>{if(nr&&nr.status===200){const cp=nr.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,cp))}return nr}).catch(()=>r)));
+});
+`;
+    try{
+        const blob=new Blob([swCode],{type:'application/javascript'});
+        const swUrl=URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swUrl,{scope:'./'}).then(reg=>{
+            console.log('SW registered',reg.scope);
+        }).catch(e=>console.warn('SW registration failed:',e.message));
+    }catch(e){console.warn('SW setup:',e)}
+}
+
+// ============================================================
+// PWA орнату ұсынысы (Add to Home Screen)
+// ============================================================
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();deferredPrompt=e;
+    // Қолданушыға ескерту — бірінші рет кіргенде ғана
+    try{
+        if(!localStorage.getItem('SQ_A2HS_shown')){
+            setTimeout(async()=>{
+                if(!deferredPrompt)return;
+                const ok=await showConfirm('📲 Бұл бағдарламаны телефонның үй экранына қосасыз ба? Офлайн режимде де жұмыс істейді.','Иә, қосу');
+                if(ok){
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then(()=>{deferredPrompt=null});
+                }
+                localStorage.setItem('SQ_A2HS_shown','1');
+            },3000);
+        }
+    }catch(x){}
+});
+// API KEY
+let AI_KEY='';try{AI_KEY=localStorage.getItem('SQ_AIKey')||''}catch(x){}
+function saveApiKey(){AI_KEY=$('set-api-key')?.value?.trim()||'';localStorage.setItem('SQ_AIKey',AI_KEY);toast('✅ API кілті сақталды')}
+function saveApiKeyFromAuth(){const k=$('auth-api-key')?.value?.trim();if(!k){return}AI_KEY=k;localStorage.setItem('SQ_AIKey',AI_KEY);$('auth-api-key').value='';const el=$('auth-api-key');el.style.borderColor='var(--green)';setTimeout(()=>el.style.borderColor='',1500);alert('✅ API Key сақталды! Енді базаға кіріңіз.')}
+// Check local data on load
+(function checkLocalData(){try{const raw=localStorage.getItem('SQP9')||localStorage.getItem('SquareProState');if(raw){const d=JSON.parse(raw);const tc=(d.transactions?.length||0)+(d.clients?.length||0)+(d.orders?.length||0)+(d.blanks?.length||0);if(tc>0){const el=$('auth-has-data');if(el)el.style.display='block';const info=$('auth-data-info');if(info)info.textContent=`${d.transactions?.length||0} транзакция • ${d.clients?.length||0} клиент • ${d.blanks?.length||0} бланк`}}if(AI_KEY){const ak=$('auth-api-key');if(ak)ak.value=AI_KEY}}catch(x){}})();
+// AI BLANK RECOGNITION
+function handleBlankDrop(e){const f=e.dataTransfer?.files?.[0];if(f&&f.type.startsWith('image/'))processBlankImage(f)}
+function handleBlankPhoto(input){const f=input.files?.[0];if(f)processBlankImage(f);input.value=''}
+async function processBlankImage(file){if(!AI_KEY){toast('⚠ Баптаулар → AI бланк тану → API Key жазыңыз','error');return}$('blk-ai-idle').style.display='none';$('blk-ai-loading').style.display='block';$('blk-ai-done').style.display='none';
+try{const base64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('Read error'));r.readAsDataURL(file)});const mt=file.type||'image/jpeg';
+const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':AI_KEY,'anthropic-dangerous-direct-browser-access':'true','anthropic-version':'2023-06-01'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mt,data:base64}},{type:'text',text:`Бұл нотариуспен куәландырылған аударма бланкі. Суреттен мына деректерді анықта және тек JSON қайтар, басқа ештеңе жазба:
+{
+  "notary_name": "нотариустың толық аты-жөні (мысалы: Купенова Бақыт Қанрекешевна)",
+  "city": "қала атауы",
+  "date": "куәландыру күні YYYY-MM-DD форматта",
+  "license_num": "лицензия нөмірі (тек сан)",
+  "license_date": "лицензия берілген күні YYYY-MM-DD",
+  "license_org": "лицензия берген мекеме",
+  "register_num": "реестр нөмірі",
+  "code": "бланк коды/штрих-код нөмірі (AM... немесе сондай)",
+  "signer": "қол қойған тұлғаның аты-жөні (аудармашы/адам кім қол қойса)",
+  "signer_iin": "ИИН нөмірі",
+  "purpose": "құжат мақсаты (мысалы: Аударма куәландыру, Қол қою куәландыру)"
+}
+Егер деректі табылмаса null жаз. Күндерді YYYY-MM-DD форматта бер.`}]}]})});
+const data=await resp.json();if(!resp.ok)throw new Error(data?.error?.message||'API error: '+resp.status);
+const txt=data.content?.map(c=>c.text||'').join('')||'';const jsonMatch=txt.match(/\{[\s\S]*\}/);if(!jsonMatch)throw new Error('JSON табылмады');
+const p=JSON.parse(jsonMatch[0]);
+if(p.notary_name)$('blk-notary-name').value=p.notary_name;
+if(p.city)$('blk-city').value=p.city;
+if(p.date)$('blk-date').value=p.date;
+if(p.license_num)$('blk-license').value=p.license_num;
+if(p.license_date)$('blk-license-date').value=p.license_date;
+if(p.license_org)$('blk-license-org').value=p.license_org;
+if(p.register_num)$('blk-reg').value=p.register_num;
+if(p.code)$('blk-code').value=p.code;
+if(p.signer)$('blk-signer').value=p.signer;
+if(p.signer_iin)$('blk-signer-iin').value=p.signer_iin;
+if(p.purpose)$('blk-purpose').value=p.purpose;
+$('blk-ai-loading').style.display='none';$('blk-ai-done').style.display='block';toast('✅ AI деректерді танып алды!')}catch(e){console.error('AI blank error:',e);$('blk-ai-loading').style.display='none';resetBlkAI();toast('AI қате: '+(e.message||'Белгісіз'),'error')}}
+</script></body></html>
